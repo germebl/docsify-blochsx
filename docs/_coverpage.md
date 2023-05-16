@@ -16,4 +16,3 @@
 
 [Manuelle Installation](manuell/get-started.md)
 [Ansible Playbook](ansible/quickstart.md)
-![color](#b3d9f8)
