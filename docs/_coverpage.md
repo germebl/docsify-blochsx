@@ -16,6 +16,4 @@
 
 [Manuelle Installation](manuell/get-started.md)
 [Ansible Playbook](ansible/quickstart.md)
-
-<!-- TODO: Set your background color or image. -->
 ![color](#b3d9f8)
