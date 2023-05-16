@@ -35,19 +35,19 @@
     <div id="app"></div>
 
     <script>
-        var repoUrl = "https://github.com/MichaelCurrin/docsify-js-template"; // TODO: Update.
+        var repoUrl = "https://github.com/germebl/docsify-blochsx";
         var editPath = repoUrl + "/blob/master/docs/";
-        var editMsg = "📝 Edit on GitHub";
+        var editMsg = "📝 Datei ändern in GitHub";
         
         window.$docsify = {
-            name: "DocsifyJS Template", // TODO: Update.
+            name: "blochSX",
             repo: repoUrl,
             
             auto2top: true,
             coverpage: true,
-            loadSidebar: false,
+            loadSidebar: true,
             subMaxLevel: 2,
-            themeColor: "#3170a7", // TODO: Set your own color.
+            themeColor: "#3170a7",
 
             plugins: [
                 EditOnGithubPlugin.create(editPath, null, editMsg)
