@@ -11,12 +11,11 @@
 - :hourglass_flowing_sand: Schnelle Einrichtung per Ansible
 - :open_file_folder: Ausführliche Dokumentation mit manuellen Schritten
 - :sparkles: Web- & PHP-, DB-, Redis-, Mail-, Monitoring-, Logging- & SIEM- Server
-- :pushpin: The library loads in the browser - no local dependencies
-- :cloud: Serve locally and on GitHub Pages or Netlify
+- :cloud: works with Hetzner Cloud & Cloudflare
 
 
-[Manuelle Installation](https://github.com/MichaelCurrin/docsify-js-template/generate) <!-- TODO: Remove on your copy of this template.-->
-[Ansible Playbook](#quickstart.md) <!-- TODO: Use ID of your homepage heading -->
+[Manuelle Installation](manuell/get-started.md)
+[Ansible Playbook](ansible/quickstart.md)
 
 <!-- TODO: Set your background color or image. -->
 ![color](#b3d9f8)

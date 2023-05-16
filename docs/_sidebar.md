@@ -1,7 +1,6 @@
-<!-- TODO: Complete with your own sidebar structure and enable sidebar in index.html - or delete this file. -->
-- [Home](/#docsifyjs-template)
-- [Fizz]()
-- [Buzz]()
+- [README](/#README.md)
+- [Manuelle Installation](/manuell/get-started.md)
+- [Ansible Quickstart](/ansible/quickstart.md)
 - Foo
     * [Bar]()
     * [Baz]()
