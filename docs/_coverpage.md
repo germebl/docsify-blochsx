@@ -1,24 +1,22 @@
 <h1 id="cover-heading">
-  DocsifyJS Template  <!-- TODO: Update title -->
+  blochSX
 </h1>
 
-[![GitHub tags](https://img.shields.io/github/tag/MichaelCurrin/docsify-js-template.svg)](https://GitHub.com/MichaelCurrin/docsify-js-template/tags/) <!-- TODO: Update username and repo name -->
 
->  Starter template for a Markdown-based docs site <!-- TODO: Replace with your description -->
+>  der perfekte Linux Server
 
 
 <!-- TODO: Update to match your project's benefits/features. Git emojis work great here. -->
 
-- :hourglass_flowing_sand: Quickly set up an elegant, responsive site
-- :open_file_folder: Use your markdown docs as content
-- :sparkles: No compilation step and no templating syntax to learn
-- :nut_and_bolt: Built on [DocsifyJS](https://docsify.js.org/)
+- :hourglass_flowing_sand: Schnelle Einrichtung per Ansible
+- :open_file_folder: Ausführliche Dokumentation mit manuellen Schritten
+- :sparkles: Web- & PHP-, DB-, Redis-, Mail-, Monitoring-, Logging- & SIEM- Server
 - :pushpin: The library loads in the browser - no local dependencies
 - :cloud: Serve locally and on GitHub Pages or Netlify
 
 
-[Use this template](https://github.com/MichaelCurrin/docsify-js-template/generate) <!-- TODO: Remove on your copy of this template.-->
-[Get Started](#docsifyjs-template) <!-- TODO: Use ID of your homepage heading -->
+[Manuelle Installation](https://github.com/MichaelCurrin/docsify-js-template/generate) <!-- TODO: Remove on your copy of this template.-->
+[Ansible Playbook](#quickstart.md) <!-- TODO: Use ID of your homepage heading -->
 
 <!-- TODO: Set your background color or image. -->
 ![color](#b3d9f8)

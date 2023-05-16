@@ -1,86 +1,115 @@
 <!-- TODO: Update with your values. -->
-# DocsifyJS Template
-> Starter template for a Markdown-based docs site
+# blochSX
+> Der perfekte Linux Server
 
- <!-- TODO: Update repo links and change license type if needed. -->
-[![GitHub tag](https://img.shields.io/github/tag/MichaelCurrin/docsify-js-template.svg)](https://GitHub.com/MichaelCurrin/docsify-js-template/tags/)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/MichaelCurrin/docsify-js-template/blob/master/README#license)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://creativecommons.org/license/by/4.0/)
 
-[![Made with latest Docsify](https://img.shields.io/npm/v/docsify/latest?label=docsify)](https://docsify.js.org/)
+## Über das Projekt
 
+Das Projekt blochSX ist eine Dokumentation zur Einrichtung des perfekten Linux Servers. Die Komponenten sind unter anderem:
+- Wireguard
+- NGINX
+- PHP8.2 FPM
+- MySQL Server 8
+- Dovecot
+- Postfix
+- rSpamd
+- Fail2Ban
+- (...)
 
-<!-- TODO: You can delete the About and Create a Docsify site sections if you create a new project from this template -->
-
-## About
-
-This is a template for a simple but elegant docs site built on _Docsify_ which magically turns your markdown in your `docs` directory into a docs site. 
-
-This is a statically-built site - just commit and push and your Github Pages site will re-deploy.
-
-_Docsify.js_ runs as a _Single-Page Application_ on `index.html` - it relies on JavaScript to pull in content from markdown file, within the app shell. This gives a modern progressive web-app experience for instant page loads. But, this **not** SEO-friendly as crawlers don't like to or can't load JavaScript. So use a static site instead if you need to be found on search engines.
-
-If you want learn about _Docsify_ and how to customize a docs like this, follow this tutorial:
-
-<div align="center">
-    <a href="https://michaelcurrin.github.io/docsify-js-tutorial/">
-        <img src="https://img.shields.io/badge/Teach_me-DocsifyJS_tutorial-blue" 
-            alt="DocsifyJS tutorial badge"
-            title="Go to tutorial">
-    </a>
-</div>
+!> Das Projekt befindet sich aktuell in der Entwicklung und ist somit **WIP** und nicht zwingend funktionstüchtig. Ab dem Release von Version 1.0.0 wird es das erste mal stable sein.
 
 
-## Create a Docsify site
-> How to create your own docs site like this one
+## Anbieter Voraussetzungen
+> Liste der Voraussetzungen um bloch.sx ohne größere Anpassungen anzuwenden:
 
-Click the button below to create your own copy of this repo.
+- Server Hosting:   Hetzner Cloud Server
+- DNS Provider:     Cloudflare
+- Domain Provider:  (optional)
 
-<div align="center">
-    <a href="https://github.com/MichaelCurrin/docsify-js-template/generate">
-        <img src="https://img.shields.io/badge/Generate-Use_this_template-2ea44f?style=for-the-badge" 
-            alt="Use this template"
-            title="Create repo from template">
-    </a>
-</div>
+In diesem Projekt nutzen wir neben den Hetzner Cloud Servern weitere Funktionen der Hetzner Cloud. Dazu gehört die Firewall, SSD Volumes, private Netzwerke, Loadbalancer. Eventuell werden weitere kleinere Tools oder Funktionen genutzt.
 
-<br>
+Wer einen anderen Server Hoster nutzen möchte, sollte die entsprechenden Teile, die uns die Hetzner Cloud Funktionalität abnimmt, selbst kompensieren können.
 
-Then follow instructions in the original GitHub repo linked below. The `README.md` file covers how to set up docs site like this one.
+Der DNS Provider ist in diesem Fall Cloudflare, um einen DNS Provider zu haben für unsere Wildcard SSL Zertifikate. Es sind allerdings alle acme.sh unterstützten DNS Provider möglich.
 
-<div align="center">
-    <a href="https://github.com/MichaelCurrin/docsify-js-template">
-        <img src="https://img.shields.io/static/v1?label=MichaelCurrin&message=docsify-js-template&color=blue&style=for-the-badge&logo=github" 
-            alt="MichaelCurrin - docsify-js-template"
-            title="Go to template repo">
-    </a>
-</div>
+## System Voraussetzungen
+> Übersicht der Voraussetzungen für die genutzten Systeme
 
+### Alle Systeme
+- Debian:       11
 
-## Preview
+### VPN Server
+- (v)CPU:          4
+- RAM:             4 GB
+- SSD Volume:      mind. 10 GB
+- Pub. IPv4/IPv6:  Ja
 
-_TODO: Complete with your content - such as a screenshot of your app or command-line usage. You can also rename Preview to Sample._
+### Web/PHP Server
+- (v)CPU:          4
+- RAM:             4 GB
+- SSD Volume:      mind. 10 GB
+- Pub. IPv4/IPv6:  Ja
 
+### DB Server
+- (v)CPU:          4
+- RAM:             8 GB
+- SSD Volume:      mind. 100 GB
+- Pub. IPv4/IPv6:  Nein
 
-## Installation
+## Redis Server
+- (v)CPU:          4
+- RAM:             4 GB
+- SSD Volume:      mind. 20 GB
+- Pub. IPv4/IPv6:  Nein
 
-_TODO: Add your instructions here or link to an installation.md page._
+### Mail Server
+- (v)CPU:          4
+- RAM:             4 GB
+- SSD Volume:      mind. 60 GB
+- Pub. IPv4/IPv6:  Ja
 
+### Monitoring Server
+- (v)CPU:          4
+- RAM:             8 GB
+- SSD Volume:      mind. 60 GB
+- Pub. IPv4/IPv6:  Nein
 
-## Usage
+### Logging/SIEM Server
+- (v)CPU:          4
+- RAM:             8 GB
+- SSD Volume:      mind. 100 GB
+- Pub. IPv4/IPv6:  Nein
 
-_TODO: Add your instructions here or link to a usage.md page._
+## Quick Start
 
+Um ein blochSX Single Server oder Multi Server Setup in wenigen Schritten anzuwenden, steht ein Ansible Playbook zur Verfügung.
 
-## Demo
+!> Das Playbook unterstützt aktuell nur das Ausführen von einem Linux Host! Python3 PIP & Ansible müssen bereits installiert sein.
 
-This section showcases some functionality of Docsify.
+Um dies anwenden zu können benötigen Sie folgendes:
+- Eine Domain die per Nameserver auf die Cloudflare DNS Server zeigt
+- Die Domain sollte als Site bei Cloudflare angelegt sein
+- Die Domain sollte bestenfalls keine DNS Records haben, außer die NS Einträge
+- Die Account-ID sowie einen API Token von Cloudflare
+- Ein vorhandenes Hetzner Cloud Projekt
+- Ein API Token aus dem Hetzner Cloud Projekt
 
+Während das Playbook läuft, müssen Sie:
+- Ihre Domain angeben (keine Subdomains!)
+- Ihren Hetzner Cloud API Token hinterlegen
+- Ihre Cloudflare Account-ID & API Token hinterlegen
+- Entscheiden ob ein Single Server oder Multi Server Setup
+- Ob Sie eine minimale oder empfohlene Leistung bevorzugen
+
+Sobald die Variablen übergeben wurden, installiert das Ansible Playbook das gewünschte Setup und erstellt dabei selbstständig die benötigten Server, SSD Volumes, privaten Netzwerke, legt DNS Records fest, installiert & konfiguriert die entsprechenden Services und konfiguriert die Hetzner Cloud Firewall. Sobald das Setup durchgelaufen ist, wird Ihnen eine README.md auf dem Server, auf dem das Playbook ausgeführt wurde, im /root Verzeichnis abgelegt. Diese README.md enthält anschließend eine umfangreiche Dokumentation zu ihren Server/n und erklärt Ihnen, wie Sie diese Server nun nutzen können.
+
+Sie können das Playbook wiefolgt herunterladen:
 ```bash
-echo "Hello, World"
+*WORK IN PROGRESS*
 ```
 
-> Sample quote
-
-?> Sample hint
-
-!> Sample warning 
+Anschließend können Sie es mit Ansible wie folgt ausführen:
+```bash
+*WORK IN PROGRESS*
+```
