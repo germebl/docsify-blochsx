@@ -1,4 +1,4 @@
-- [README](/#README.md)
+- [README](README.md)
 - Ansible Quickstart
   - [README](manuell/README.md)
   - [Voraussetzungen](ansible/requirements.md)
