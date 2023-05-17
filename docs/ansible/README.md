@@ -1,4 +1,4 @@
-## Quick Start
+# ANSIBLE README
 
 Um ein blochSX Single Server oder Multi Server Setup in wenigen Schritten anzuwenden, steht ein Ansible Playbook zur Verfügung.
 
