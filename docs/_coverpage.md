@@ -14,5 +14,5 @@
 - :cloud: Arbeitet mit Hetzner Cloud & Cloudflare
 
 
-[Manuelle Installation](#/manuell/readme.md)
-[Ansible Playbook](#/ansible/readme.md)
+[Manuelle Installation](/manuell/readme.md)
+[Ansible Playbook](/ansible/readme.md)
