@@ -1,37 +1,37 @@
-- [README](#/readme.md)
+- [README](/readme.md)
 - Ansible Quickstart
-  - [README](#/manuell/readme.md)
-  - [Voraussetzungen](#/ansible/requirements.md)
-  - [Quickstart](#/ansible/quickstart.md)
+  - [README](/manuell/readme.md)
+  - [Voraussetzungen](/ansible/requirements.md)
+  - [Quickstart](/ansible/quickstart.md)
 - Manuelle Installation
-  - [README](#/manuell/readme.md)
-  - [Voraussetzungen](#/manuell/requirements.md)
+  - [README](/manuell/readme.md)
+  - [Voraussetzungen](/manuell/requirements.md)
   - Base System
-    - [README](#/manuell/base/readme.md)
-    - [Voraussetzungen](#/manuell/base/requirements.md)
+    - [README](/manuell/base/readme.md)
+    - [Voraussetzungen](/manuell/base/requirements.md)
   - VPN Server
-    - [README](#/manuell/vpn/readme.md)
-    - [Voraussetzungen](#/manuell/vpn/requirements.md)
+    - [README](/manuell/vpn/readme.md)
+    - [Voraussetzungen](/manuell/vpn/requirements.md)
   - Master Server
-    - [README](#/manuell/master/readme.md)
-    - [Voraussetzungen](#/manuell/master/requirements.md)
+    - [README](/manuell/master/readme.md)
+    - [Voraussetzungen](/manuell/master/requirements.md)
   - DB Server
-    - [README](#/manuell/db/readme.md)
-    - [Voraussetzungen](#/manuell/db/requirements.md)
+    - [README](/manuell/db/readme.md)
+    - [Voraussetzungen](/manuell/db/requirements.md)
   - App Server
-    - [README](#/manuell/app/readme.md)
-    - [Voraussetzungen](#/manuell/app/requirements.md)
+    - [README](/manuell/app/readme.md)
+    - [Voraussetzungen](/manuell/app/requirements.md)
   - Redis Server
-    - [README](#/manuell/redis/readme.md)
-    - [Voraussetzungen](#/manuell/redis/requirements.md)
+    - [README](/manuell/redis/readme.md)
+    - [Voraussetzungen](/manuell/redis/requirements.md)
   - Mail Server
-    - [README](#/manuell/mail/readme.md)
-    - [Voraussetzungen](#/manuell/mail/requirements.md)
+    - [README](/manuell/mail/readme.md)
+    - [Voraussetzungen](/manuell/mail/requirements.md)
   - Monitoring Server
-    - [README](#/manuell/monitoring/readme.md)
-    - [Voraussetzungen](#/manuell/monitor/requirements.md)
+    - [README](/manuell/monitoring/readme.md)
+    - [Voraussetzungen](/manuell/monitor/requirements.md)
   - Logging/SIEM Server
-    - [README](#/manuell/siem/readme.md)
-    - [Voraussetzungen](#/manuell/siem/requirements.md)
-- [Mitwirken!](#/contribute.md)
-- [Support](#/support.md)
+    - [README](/manuell/siem/readme.md)
+    - [Voraussetzungen](/manuell/siem/requirements.md)
+- [Mitwirken!](/contribute.md)
+- [Support](/support.md)
