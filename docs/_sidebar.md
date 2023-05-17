@@ -1,6 +1,6 @@
 - [README](/readme.md)
 - Ansible Quickstart
-  - [README](/manuell/readme.md)
+  - [README](/ansible/readme.md)
   - [Voraussetzungen](/ansible/requirements.md)
   - [Quickstart](/ansible/quickstart.md)
 - Manuelle Installation
