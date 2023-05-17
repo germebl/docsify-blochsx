@@ -14,5 +14,5 @@
 - :cloud: works with Hetzner Cloud & Cloudflare
 
 
-[Manuelle Installation](manuell/get-started.md)
-[Ansible Playbook](ansible/quickstart.md)
+[Manuelle Installation](/manuell/README.md)
+[Ansible Playbook](/ansible/README.md)
