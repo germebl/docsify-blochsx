@@ -1,11 +1,13 @@
-# blochSX !
-> Der perfekte Linux Server
+# blochSX!
+> The Perfect Linux Server
 
 [![License](https://img.shields.io/badge/license-CC%20BY--NC%203.0-blue)](https://creativecommons.org/licenses/by-nc/3.0/)
 
-## Über das Projekt
+## About the Project
 
-Das Projekt blochSX ist eine Dokumentation zur Einrichtung des perfekten Linux Servers. Die Komponenten sind unter anderem:
+!> This project is still experimental and **not for production NOR for development use**.
+
+The blochSX project is a documentation guide for setting up the perfect Linux server. The components include:
 - Wireguard
 - NGINX
 - PHP8.2 FPM
@@ -15,28 +17,42 @@ Das Projekt blochSX ist eine Dokumentation zur Einrichtung des perfekten Linux S
 - Postfix
 - rSpamd
 - Fail2Ban
-- graylog
+- Graylog
 - (...)
 
-## Choose your way
+## Prerequisites
+> List of prerequisites to apply bloch.sx without major modifications
 
-Suche dir deinen Weg aus. 
+- Server Hosting: Hetzner Cloud Server
+- DNS Provider: Cloudflare
+- Domain Provider: (optional)
 
-Wähle die Deployment Methode:
- - Ansible Playbook
- - manuelle Installation
+> In this project, we use additional features of the Hetzner Cloud, such as the firewall, SSD volumes, private networks, and load balancers. Additional smaller tools or features may be utilized. Cloudflare is used as the DNS provider for our wildcard SSL certificates.
 
-Wähle die Server-Art:
- - Single Server Setup
- - Multi Server Setup
+> If you wish to use a different server hosting provider, you should be able to compensate for the specific parts that leverage Hetzner Cloud functionality. Other DNS providers are possible. All acme.sh supported DNS providers are allowed. HTTP validation with acme.sh should not be used as not all servers will be accessible from outside.
 
-## Voraussetzungen
-> Liste der Voraussetzungen um bloch.sx ohne größere Anpassungen anzuwenden
+### How to get started?
 
-- Server Hosting:   Hetzner Cloud Server
-- DNS Provider:     Cloudflare
-- Domain Provider:  (optional)
+To install and set up the blochSX server, follow these steps:
 
-> In diesem Projekt nutzen wir neben den Hetzner Cloud Servern weitere Funktionen der Hetzner Cloud. Dazu gehört die Firewall, SSD Volumes, private Netzwerke, Loadbalancer. Eventuell werden weitere kleinere Tools oder Funktionen genutzt. Cloudflare kommt als DNS Provider zum Einsatz für unsere Wildcard SSL Zertifikate.
+1. **Prerequisites**: Make sure you have a Hetzner Cloud and a Cloudflare Account. If you wish to use a different server hosting provider or DNS provider, please feel free to do the necessary adjustments on your own.
 
-> Wer einen anderen Server Hoster nutzen möchte, sollte die entsprechenden Teile, die uns die Hetzner Cloud Funktionalität abnimmt, selbst kompensieren können.  Andere DNS Provider sind möglich. Es sind alle acme.sh unterstützten DNS Provider möglich. http Validation bei acme.sh sollte nicht genutzt werden, da nicht alle Server von außen erreichbar sein werden.
+2. **Information**: In this tutorial we will work with real ip-addresses and hostnames, to make it more understandable. Below you can find a list of all hostnames, ip-addresses (ipv4 & ipv6), DNS records and many more.
+
+3. **Let's go**: To get started please read the documentation in the correct order you'll see in the sidebar. Each server we will setup, needs the `base` setup. From there you can do each setup.
+
+| server | type     | name  | IPv4  | IPv6  |
+|----------|----------|-------|-------|-------|
+| vpn | CX11 | vpn.sudoers.biz | 127.0.0.1 | fe80::1 |
+| db | CX11 | db.sudoers.biz | 127.0.0.1 | fe80::1 |
+| master | CX11 | master.sudoers.biz | 127.0.0.1 | fe80::1 |
+| app | CX11 | app.sudoers.biz | 127.0.0.1 | fe80::1 |
+| redis | CX11 | redis.sudoers.biz | 127.0.0.1 | fe80::1 |
+| mail | CX11 | mail.sudoers.biz | 127.0.0.1 | fe80::1 |
+| monitor | CX11 | monitor.sudoers.biz | 127.0.0.1 | fe80::1 |
+| siem | CX11 | siem.sudoers.biz | 127.0.0.1 | fe80::1 |
+
+For more detailed information and advanced configurations, please refer to the complete blochSX documentation.
+
+If you encounter any issues during the installation or setup process, feel free to seek support in the issue tracker or on [discord.bloch.sx](https://discord.bloch.sx).
+```
