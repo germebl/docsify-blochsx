@@ -29,9 +29,6 @@
     <!-- Syntax highlighting.-->
     <!-- TODO: Add prism-bash, prism-python, prism-javascript etc. as separate items so you can load syntax highlighting for that language. -->
     <script defer src="//unpkg.com/prismjs@1/components/prism-markdown.min.js"></script>
-    <!-- Collapsable Sidebar Plugin-->
-    <script src="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script>
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.css" />
 </head>
 
 <body>
@@ -51,7 +48,6 @@
             loadSidebar: true,
             subMaxLevel: 4,
             themeColor: "#3170a7",
-            sidebarDisplayLevel: 1,
 
             plugins: [
                 EditOnGithubPlugin.create(editPath, null, editMsg)
