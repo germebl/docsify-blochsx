@@ -1,37 +1,37 @@
-- [README](readme.md)
+- [README](README.md)
 - Ansible Quickstart
-  - [README](/ansible/readme.md)
+  - [README](/ansible/README.md)
   - [Voraussetzungen](/ansible/requirements.md)
   - [Quickstart](/ansible/quickstart.md)
 - Manuelle Installation
-  - [README](/manuell/readme.md)
+  - [README](/manuell/README.md)
   - [Voraussetzungen](/manuell/requirements.md)
   - Base System
-    - [README](/manuell/base/readme.md)
+    - [README](/manuell/base/README.md)
     - [Voraussetzungen](/manuell/base/requirements.md)
   - VPN Server
-    - [README](/manuell/vpn/readme.md)
+    - [README](/manuell/vpn/README.md)
     - [Voraussetzungen](/manuell/vpn/requirements.md)
   - Master Server
-    - [README](/manuell/master/readme.md)
+    - [README](/manuell/master/README.md)
     - [Voraussetzungen](/manuell/master/requirements.md)
   - DB Server
-    - [README](/manuell/db/readme.md)
+    - [README](/manuell/db/README.md)
     - [Voraussetzungen](/manuell/db/requirements.md)
   - App Server
-    - [README](/manuell/app/readme.md)
+    - [README](/manuell/app/README.md)
     - [Voraussetzungen](/manuell/app/requirements.md)
   - Redis Server
-    - [README](/manuell/redis/readme.md)
+    - [README](/manuell/redis/README.md)
     - [Voraussetzungen](/manuell/redis/requirements.md)
   - Mail Server
-    - [README](/manuell/mail/readme.md)
+    - [README](/manuell/mail/README.md)
     - [Voraussetzungen](/manuell/mail/requirements.md)
   - Monitoring Server
-    - [README](/manuell/monitoring/readme.md)
+    - [README](/manuell/monitoring/README.md)
     - [Voraussetzungen](/manuell/monitor/requirements.md)
   - Logging/SIEM Server
-    - [README](/manuell/siem/readme.md)
+    - [README](/manuell/siem/README.md)
     - [Voraussetzungen](/manuell/siem/requirements.md)
 - [Mitwirken!](contribute.md)
 - [Support](support.md)
