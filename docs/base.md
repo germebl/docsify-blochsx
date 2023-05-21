@@ -2,7 +2,7 @@
 
 This guide will walk you through the necessary preparations for configuring a basic Linux Debian 11 system. The setup will include some essential security measures and basic configurations and should be the template for all of our servers.
 
-## 1. Order
+## 1. Order & rDNS
 
 First, order a server on the hetzner cloud. It should have the specifications from the general readme. Choose your specifications in order of the list. While ordering i'll recommend to choose a good location for your project. Next important thing is to choose *Debian 11* as operating system.
 
@@ -22,6 +22,10 @@ When you come to the selection of the servers name, i absolutely recommend to ch
 ?> Anything not explicitly mentioned can be ignored during the ordering process.
 
 You can now order your server.
+
+After your server was delivered, go to the network tab of your server and setup the rDNS for IPv4 and IPv6. It will be the same as the hostname.
+
+For IPv6 please use the `::1` address.
 
 ## 3. Connect to the server
 

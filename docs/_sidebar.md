@@ -1,6 +1,5 @@
 - [README](README.md)
-- Base System
-  - [Prepare](/base/prepare.md)
+- [Base System](base.md)
 - VPN Server
   - [Prepare](/vpn/prepare.md)
 - Master Server
