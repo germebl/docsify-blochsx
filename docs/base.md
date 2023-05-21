@@ -7,9 +7,9 @@ This guide will walk you through the necessary preparations for configuring a ba
 First, order a server on the hetzner cloud. It should have the specifications from the general readme. Choose your specifications in order of the list. While ordering i'll recommend to choose a good location for your project. Next important thing is to choose *Debian 11* as operating system.
 
 ?> If its your first server you will order, please activate "private network" on the "Networking" step and create the following network:
-?> name: (optional)
-?> network-zone: (fits to your server location)
-?> ip-area: 192.168.231.0 / 24
+  name: (optional)
+  network-zone: (fits to your server location)
+  ip-area: 192.168.231.0 / 24
 
 If you already have your own ssh-key (i'll recommend to use ed25519) you can add the ssh-key to use with your server. If you did not have any ssh-key, please create one. You can [check here](/other/create-ssh-key.md) how to do it.
 
