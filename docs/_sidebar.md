@@ -7,7 +7,7 @@
 - DB Server
   - [Prepare](/db/prepare.md)
 - App Server
-  - [Prepare](/app/prepare.md)
+  - [Prepare](app.md)
 - Redis Server
   - [Prepare](/redis/prepare.md)
 - Mail Server

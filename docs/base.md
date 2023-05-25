@@ -1,4 +1,4 @@
-# Preparing Steps for Base-Server
+# Setup the Base Server
 
 This guide will walk you through the necessary preparations for configuring a basic Linux Debian 11 system. The setup will include some essential security measures and basic configurations and should be the template for all of our servers.
 
