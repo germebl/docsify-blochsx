@@ -1,11 +1,10 @@
 # Setup the VPN Server
 
-This guide will walk you through the necessary preparations for configuring a Wireguard VPN server to build up a company network on Linux Debian 11 base system. The setup will include the essential steps to install and configure the VPN server and how to connect clients from employees.
+This guide will walk you through the necessary preparations for configuring a Wireguard VPN server to build up a company network on a [Linux Debian 11 Base System](base.md). The setup will include the essential steps to install and configure the VPN server and how to connect clients from employees and open the wireguard port in iptables.
 
 ## Requirements
 
-- Hetzner Cloud CX11 Server
-- [Debian 11 Base System](base.md) on it
+- [Debian 11 Base System](base.md)
 
 ## 1. Install Wireguard
 The basic installation of wireguard is very simple. We just need to install it over the apt repositorys of our debian system:
@@ -30,7 +29,7 @@ ListenPort = 51820
 PrivateKey = <SERVERS-PRIVATE-KEY>
 ```
 
-You can create a private & public key:
+You can create a private & public key as follows:
 ```
 cd /etc/wireguard
 wg genkey | tee privatekey | wg pubkey > publickey
@@ -70,7 +69,7 @@ Because we use iptables-persistent, we will add this rule within the rules-file 
 5. Restore the IPv4 Rules with `iptables-restore /etc/iptables/rules.v4`
 
 ## 4. How to connect a employee computer
-As follows we will explain how to connect a clients computer with the wireguard vpn server, which replicates the company network (wireguard network 10.0.0.0/24 as network for employee networks and 192.168.0.0/24 as private network for our servers).
+Now we will explain how to connect a clients computer with the Wireguard VPN Server, which replicates the company network (wireguard network 10.0.0.0/24 as network for employee networks and hetzner private network 192.168.0.0/24 as private network for our servers).
 
 1. [Install Wireguard on the employees computer](https://www.wireguard.com/install/)
   - On Linux the configuration file is here: `/etc/wireguard/wg0.conf`
@@ -95,7 +94,9 @@ As follows we will explain how to connect a clients computer with the wireguard 
   - Replace `<CLIENTS-PRIVATE-KEY>` with the on the client generated or already available private key
   - Replace `<SERVERS-PUBLIC-KEY>` with the on the server created public key
   - Replace `<SERVERS-PUBLIC-IP>` with the public ip address of the vpn server
+  
   !> The `Address = 10.0.0.2/32` is the second ip address of this network. The first is from the vpn server itself. When you add new employee computers, you need to count up that number. 
+
 3. Open the servers configuration file within `/etc/wireguard/wg0.conf` with `nano /etc/wireguard/wg0.conf`
   - Add the Peer (Client) to the end of the file:
   ```
