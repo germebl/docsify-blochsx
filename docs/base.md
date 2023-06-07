@@ -9,7 +9,7 @@ First, order a server on the hetzner cloud. It should have the specifications fr
 ?> If its your first server you will order, please activate "private network" on the "Networking" step and create the following network:
   name: (optional)
   network-zone: (fits to your server location)
-  ip-area: 192.168.231.0 / 24
+  ip-area: 192.168.0.0 / 24
 
 If you already have your own ssh-key (i'll recommend to use ed25519) you can add the ssh-key to use with your server. If you did not have any ssh-key, please create one. You can [check here](/other/create-ssh-key.md) how to do it.
 
@@ -39,22 +39,41 @@ On every setup like web, db, mail etc. it will be required to already be connect
 Once the installation is complete, open a terminal and update the package lists and upgrade the system packages to the latest versions using the following commands:
 
 ```bash
-sudo apt update
-sudo apt upgrade
+apt update
+ apt upgrade
 ```
 
 ## 3. Firewall Configuration
-To enhance the security of your system, configure the firewall to allow only necessary incoming connections. Use the following commands to install and configure the ufw firewall:
+To enhance the security of your system, configure the firewall to allow only necessary incoming connections. Use the following commands to install and configure the iptables firewall.
+
+When you get asked if you want to save the actual rules of ipv4 and ipv6 rules, choose yes.
 
 ```bash
-sudo apt install ufw
-sudo ufw default deny incoming
-sudo ufw default allow outgoing
-sudo ufw allow ssh
-sudo ufw enable
+apt install iptables-persistent
+
+iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+iptables -A INPUT -p icmp -j ACCEPT
+iptables -A INPUT -i lo -j ACCEPT
+iptables -A INPUT -j DROP
+
+ip6tables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+ip6tables -A INPUT -p icmpv6 -j ACCEPT
+ip6tables -A INPUT -i lo -j ACCEPT
+ip6tables -A INPUT -j DROP
+
+iptables-save > /etc/iptables/rules.v4
+ip6tables-save > /etc/iptables/rules.v6
 ```
 
-?> Each setup has its own individual firewall settings. These settings just to deny incoming, allow outgoing and allow incoming ssh connections.
+?> Each setup has its own individual firewall settings. These allow all related and established connections, allow icmp incoming traffic, allow incoming traffic to the loopback interface and drop everything else. When we configure services we will add these rules before rule one, because iptables works in the order the rules are created.
+
+!> As [when you are done with setup your VPN server](vpn.md) you really should change the rule for ssh. Actually we allow all ip addresses to connect with ssh. When you are done with setup your VPN server, you can change the access to port 22 from all to the wireguard vpn network (employee ip addresses when they connected to the vpn server) as follows:
+1. Open the file /etc/iptables/rules.v4 with `nano /etc/iptables/rules.v4`
+2. Replace the rule `-A INPUT -p tcp --dport 22 -j ACCEPT` with `-A INPUT -p tcp --dport 22 -s 10.0.0.0/24 -j ACCEPT`
+3. Restore the IPv4 Rules with `iptables-restore /etc/iptables/rules.v4`
+
+?> We do not allow the SSH port for IPv6 because our VPN uses IPv4 only in the company private network and a connection to the SSH should only be available to clients with a ip-address of the wireguard network. We use iptables-persistent to save the rules to files and restore them on every startup, so they don't get lost.
 
 ## 4. Securing SSH
 
@@ -75,7 +94,7 @@ Overall, securing SSH is essential for safeguarding your Linux Debian 11 system 
 Edit the SSH server configuration file using a text editor. The configuration file is located at `/etc/ssh/sshd_config`. Use the following command to open it:
 
 ```bash
-sudo nano /etc/ssh/sshd_config
+nano /etc/ssh/sshd_config
 ```
 
 - Locate the following directives in the file:
@@ -95,7 +114,7 @@ Save the changes and exit the text editor (Ctrl + O, then Ctrl + X in Nano).
 Restart the SSH service for the changes to take effect:
 
 ```bash
-sudo systemctl restart ssh
+systemctl restart ssh
 ```
 
 ## 5. Automatic security updates
@@ -103,13 +122,13 @@ Automatic security updates are crucial for maintaining the security and integrit
 
 Install the necessary packages by running the following command:
 ```bash
-sudo apt-get install unattended-upgrades
+apt-get install unattended-upgrades
 
 ```
 
 Once the installation is complete, open the unattended-upgrades configuration file using a text editor. Use the following command to open it:
 ```bash
-sudo nano /etc/apt/apt.conf.d/50unattended-upgrades
+nano /etc/apt/apt.conf.d/50unattended-upgrades
 ```
 
 In the configuration file, locate the following line:
@@ -130,7 +149,7 @@ Save the changes and exit the text editor (Ctrl + O, then Ctrl + X in Nano).
 
 By default, unattended-upgrades is configured to run automatically using cron. However, we need to adjust the schedule to run at 04:00 am. Open the unattended-upgrades cron configuration file using a text editor:
 ```bash
-sudo nano /etc/cron.d/unattended-upgrades
+nano /etc/cron.d/unattended-upgrades
 ```
 
 In the cron configuration file, locate the line that starts with # 0 4, and remove the # at the beginning of the line to uncomment it. It should look like this:
@@ -142,7 +161,7 @@ Save the changes and exit the text editor (Ctrl + O, then Ctrl + X in Nano).
 
 The configuration is now complete. Unattended upgrades will automatically install security updates at 04:00 am on your Linux Debian server.
 
-?> You can test the configuration by running the command `sudo unattended-upgrade --dry-run` to simulate the installation of updates without actually applying them.
+?> You can test the configuration by running the command `unattended-upgrade --dry-run` to simulate the installation of updates without actually applying them.
 
 By following these steps, you have configured automatic security updates on your Linux Debian server. This ensures that critical security updates are installed regularly, providing ongoing protection and reducing the risk of vulnerabilities on your system.
 
@@ -152,13 +171,11 @@ Fail2Ban is an essential tool for enhancing the security of your server, particu
 
 Public key authentication is considered more secure than password authentication since it relies on cryptographic key pairs. However, if password authentication is explicitly disabled, attackers still attempt to gain access by guessing passwords or launching brute-force attacks and so we know, that these are incorrect attempts.
 
-Fail2Ban, with its SSH jail and custom jail configuration, helps protect your server by detecting and blocking repeated failed login attempts. It monitors SSH logs, identifies IP addresses that exceed the allowed number of failed password authentication attempts, and automatically blocks them. This effectively mitigates the risk of unauthorized access and strengthens the overall security of your server.
-
-By utilizing Fail2Ban to enforce the use of public key authentication and block login attempts with password authentication, you can significantly reduce the chances of successful attacks targeting your SSH service. It provides an additional layer of defense, safeguarding your server and ensuring that only authorized users with valid SSH keys can access your system.
+Fail2Ban, with its SSH jail configuration, helps protect your server by detecting and blocking repeated failed login attempts. It monitors SSH logs, identifies IP addresses that exceed the allowed number of failed password authentication attempts, and automatically blocks them. This effectively mitigates the risk of unauthorized access and strengthens the overall security of your server.
 
 Open the Fail2Ban jail configuration file for SSH:
 ```bash
-sudo nano /etc/fail2ban/jail.d/ssh.conf
+nano /etc/fail2ban/jail.d/ssh.conf
 ```
 
 In the file, make sure the following settings are present or uncommented:
@@ -169,41 +186,9 @@ enabled = true
 
 Save the changes and exit the text editor (Ctrl + O, then Ctrl + X in Nano).
 
-Create a new jail configuration file:
-```bash
-sudo nano /etc/fail2ban/jail.d/sshd-password.conf
-```
-
-Add the following content to the file:
-```bash
-[sshd-password]
-enabled = true
-filter = custom
-port = ssh
-logpath = /var/log/auth.log
-maxretry = 2
-banaction = iptables-multiport
-```
-
-Save the changes and exit the text editor (Ctrl + O, then Ctrl + X in Nano).
-
-Create a new filter configuration file:
-```bash
-sudo nano /etc/fail2ban/filter.d/sshd-password.conf
-```
-
-Add the folowing content to the file:
-```bash
-[Definition]
-failregex = ^.*(?:ssh|sshd)[\[\d+\]]*:.*(?i)Failed password.*$
-ignoreregex =
-```
-
-Save the changes and exit the text editor (Ctrl + O, then Ctrl + X in Nano).
-
 Restart the Fail2Ban service to apply the changes:
 ```bash
-sudo systemctl restart fail2ban
+systemctl restart fail2ban
 ```
 
 Now, Fail2Ban is configured to monitor SSH logs and block IP addresses that have two or more failed login attempts with password authentication.
@@ -224,7 +209,7 @@ By configuring these modules, you enhance your server's resilience against DoS a
 
 Edit the sysctl configuration file using a text editor:
 ```bash
-sudo nano /etc/sysctl.conf
+nano /etc/sysctl.conf
 ```
 
 In the file, look for the following lines or add them if they are not present:
@@ -239,7 +224,7 @@ Save the changes and exit the text editor (Ctrl + O, then Ctrl + X in Nano).
 
 Apply the new sysctl settings by running the following command:
 ```bash
-sudo sysctl -p
+sysctl -p
 ```
 
 This reloads the sysctl settings from the configuration file. The DoS protection modules are now enabled on your Debian server.
@@ -298,10 +283,12 @@ ls
 3. Open each logrotate configuration file using a text editor. For example, if you want to edit the configuration for a service named `myapp`, use the following command:
 
 ```bash
-sudo nano myapp
+nano myapp
 ```
 
 4. Inside the configuration file, locate the section that defines the log file you want to rotate. It typically starts with a line like `"/path/to/log/file"`. Make sure you're modifying the correct section for each log file.
+
+Do not change any other options, cause they mostly needed for that specific type of logfile.
 
 5. Add or modify the following options within the log file section:
 - `rotate 14`: This sets the number of log files to keep. Change the value to `14`.
@@ -327,7 +314,7 @@ dateext
 8. Test the logrotate configurations to ensure they are working as expected. Run the following command:
 
 ```bash
-sudo logrotate -vf /etc/logrotate.conf
+logrotate -vf /etc/logrotate.conf
 ```
 
 This command applies the logrotate configurations and displays verbose output so you can check for any errors or warnings.
