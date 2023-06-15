@@ -1,10 +1,10 @@
 # Setup the Base Server
 
-This guide will walk you through the necessary preparations for configuring a basic Linux Debian 11 system. The setup will include some essential security measures and basic configurations and should be the template for all of our servers.
+This guide will walk you through the necessary preparations for configuring a basic Linux Debian 12 system. The setup will include some essential security measures and basic configurations and should be the template for all of our servers.
 
 ## 1. Order & rDNS
 
-First, order a server on the hetzner cloud. It should have the specifications from the general readme. Choose your specifications in order of the list. While ordering i'll recommend to choose a good location for your project. Next important thing is to choose *Debian 11* as operating system.
+First, order a server on the hetzner cloud. It should have the specifications from the general readme. Choose your specifications in order of the list. While ordering i'll recommend to choose a good location for your project. Next important thing is to choose *Debian 12* as operating system.
 
 ?> If its your first server you will order, please activate "private network" on the "Networking" step and create the following network:
   name: (optional)
@@ -43,7 +43,15 @@ apt update
  apt upgrade
 ```
 
-## 3. Firewall Configuration
+## 3. Install Rsyslog
+Rsyslog is an open source implementation of the syslog protocol for Unix and Unix-like systems. It extends the original syslogd model with content-based filtering, extensive deployment options for filters, flexible configuration options, and adds important features such as TCP as a transmission protocol.
+
+We will install it, if its not already installed with:
+```bash
+apt install rsyslog
+```
+
+## 4. Firewall Configuration
 To enhance the security of your system, configure the firewall to allow only necessary incoming connections. Use the following commands to install and configure the iptables firewall.
 
 When you get asked if you want to save the actual rules of ipv4 and ipv6 rules, choose yes.
@@ -57,6 +65,7 @@ iptables -A INPUT -p icmp -j ACCEPT
 iptables -A INPUT -i lo -j ACCEPT
 iptables -A INPUT -j DROP
 
+iptables -A INPUT -p tcp --dport 22 -j ACCEPT
 ip6tables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 ip6tables -A INPUT -p icmpv6 -j ACCEPT
 ip6tables -A INPUT -i lo -j ACCEPT
@@ -75,9 +84,9 @@ ip6tables-save > /etc/iptables/rules.v6
 
 ?> We do not allow the SSH port for IPv6 because our VPN uses IPv4 only in the company private network and a connection to the SSH should only be available to clients with a ip-address of the wireguard network. We use iptables-persistent to save the rules to files and restore them on every startup, so they don't get lost.
 
-## 4. Securing SSH
+## 5. Securing SSH
 
-Securing SSH (Secure Shell) is of paramount importance for any Linux system, including Linux Debian 11. SSH is a widely used protocol for remote access to servers and allows secure communication between a client and a server over an unsecured network.Here's a short introduction on why it's crucial to secure SSH:
+Securing SSH (Secure Shell) is of paramount importance for any Linux system, including Linux Debian 12. SSH is a widely used protocol for remote access to servers and allows secure communication between a client and a server over an unsecured network.Here's a short introduction on why it's crucial to secure SSH:
 
 1. **Protection against unauthorized access:** SSH is often targeted by malicious actors attempting to gain unauthorized access to systems. By securing SSH, you significantly reduce the risk of successful attacks such as brute-force password guessing or exploitation of vulnerabilities. This helps safeguard sensitive data, applications, and system resources from unauthorized access.
 
@@ -89,12 +98,12 @@ Securing SSH (Secure Shell) is of paramount importance for any Linux system, inc
 
 5. **Compliance with security best practices:** Secure SSH configurations align with security best practices and industry standards. By implementing these measures, you demonstrate a commitment to maintaining a secure system environment. This is particularly crucial if you handle sensitive data, are subject to regulatory requirements, or have a responsibility to protect customer information.
 
-Overall, securing SSH is essential for safeguarding your Linux Debian 11 system from unauthorized access, data breaches, and other security threats. By implementing strong authentication mechanisms, encrypting communication, and following best practices, you significantly enhance the security posture of your system, ensuring the confidentiality, integrity, and availability of your data and resources.
+Overall, securing SSH is essential for safeguarding your Linux Debian 12 system from unauthorized access, data breaches, and other security threats. By implementing strong authentication mechanisms, encrypting communication, and following best practices, you significantly enhance the security posture of your system, ensuring the confidentiality, integrity, and availability of your data and resources.
 
 Edit the SSH server configuration file using a text editor. The configuration file is located at `/etc/ssh/sshd_config`. Use the following command to open it:
 
 ```bash
-nano /etc/ssh/sshd_config
+less /etc/ssh/sshd_config
 ```
 
 - Locate the following directives in the file:
@@ -109,6 +118,24 @@ nano /etc/ssh/sshd_config
   - `PermitEmptyPasswords`: Set this option to `no` to disallow empty passwords for user authentication.
   - `MaxAuthTries`: Specifies the maximum number of authentication attempts permitted per connection. Setting a low value (e.g., 3) can help prevent brute-force attacks.
 
+Write these changed lines to:
+```bash
+nano /etc/ssh/sshd_config.d/initial.conf
+```
+
+It should look like:
+```bash
+Port 22
+PermitRootLogin yes
+PasswordAuthentication no
+PubkeyAuthentication yes
+AuthorizedKeysFile %h/.ssh/authorized_keys
+ChallengeResponseAuthentication no
+X11Forwarding no
+LoginGraceTime 30
+PermitEmptyPasswords no
+MaxAuthTries 3
+```
 
 Save the changes and exit the text editor (Ctrl + O, then Ctrl + X in Nano).
 Restart the SSH service for the changes to take effect:
@@ -117,72 +144,36 @@ Restart the SSH service for the changes to take effect:
 systemctl restart ssh
 ```
 
-## 5. Automatic security updates
-Automatic security updates are crucial for maintaining the security and integrity of your Linux Debian server. This feature ensures that your system remains up-to-date with the latest security patches and fixes, reducing the risk of potential vulnerabilities being exploited by attackers. By enabling automatic security updates, you can proactively protect your server from known security threats, minimize the window of exposure, and enhance the overall security posture of your system. It provides a convenient and efficient way to keep your server protected without manual intervention, saving you time and effort while ensuring the continuous security of your Linux Debian environment.
-
-Install the necessary packages by running the following command:
-```bash
-apt-get install unattended-upgrades
-
-```
-
-Once the installation is complete, open the unattended-upgrades configuration file using a text editor. Use the following command to open it:
-```bash
-nano /etc/apt/apt.conf.d/50unattended-upgrades
-```
-
-In the configuration file, locate the following line:
-```bash
-//Unattended-Upgrade::Allowed-Origins { ... };
-```
-
-Uncomment the line by removing the // at the beginning, and ensure that it looks like this:
-```bash
-Unattended-Upgrade::Allowed-Origins { ... };
-```
-
-Inside the curly braces {}, add the following entry to allow only security updates:
-```bash
-"${distro_id}:${distro_codename}-security";
-```
-Save the changes and exit the text editor (Ctrl + O, then Ctrl + X in Nano).
-
-By default, unattended-upgrades is configured to run automatically using cron. However, we need to adjust the schedule to run at 04:00 am. Open the unattended-upgrades cron configuration file using a text editor:
-```bash
-nano /etc/cron.d/unattended-upgrades
-```
-
-In the cron configuration file, locate the line that starts with # 0 4, and remove the # at the beginning of the line to uncomment it. It should look like this:
-```bash
-0 4 * * * root unattended-upgrade --dry-run
-```
-
-Save the changes and exit the text editor (Ctrl + O, then Ctrl + X in Nano).
-
-The configuration is now complete. Unattended upgrades will automatically install security updates at 04:00 am on your Linux Debian server.
-
-?> You can test the configuration by running the command `unattended-upgrade --dry-run` to simulate the installation of updates without actually applying them.
-
-By following these steps, you have configured automatic security updates on your Linux Debian server. This ensures that critical security updates are installed regularly, providing ongoing protection and reducing the risk of vulnerabilities on your system.
-
 ## 6. Fail2Ban Anti Bruteforce
 
-Fail2Ban is an essential tool for enhancing the security of your server, particularly when it comes to SSH access. By configuring Fail2Ban with an SSH jail and a custom jail, you can effectively block login attempts with SSH password authentication when only public key authentication is allowed.
-
-Public key authentication is considered more secure than password authentication since it relies on cryptographic key pairs. However, if password authentication is explicitly disabled, attackers still attempt to gain access by guessing passwords or launching brute-force attacks and so we know, that these are incorrect attempts.
+Fail2Ban is an essential tool for enhancing the security of your server, particularly when it comes to SSH access. By configuring Fail2Ban with an SSH jail, you can effectively block failed login attempts with SSH.
 
 Fail2Ban, with its SSH jail configuration, helps protect your server by detecting and blocking repeated failed login attempts. It monitors SSH logs, identifies IP addresses that exceed the allowed number of failed password authentication attempts, and automatically blocks them. This effectively mitigates the risk of unauthorized access and strengthens the overall security of your server.
 
+First we need to install fail2ban:
+```bash
+apt install fail2ban
+```
+
 Open the Fail2Ban jail configuration file for SSH:
 ```bash
-nano /etc/fail2ban/jail.d/ssh.conf
+nano /etc/fail2ban/jail.d/sshd.conf
 ```
 
 In the file, make sure the following settings are present or uncommented:
 ```bash
 [sshd]
-enabled = true
+enabled   = true
+mode      = aggressive
+port      = ssh
+logpath   = %(sshd_log)s
+backend   = %(sshd_backend)s
+bantime   = 43200m
+findtime  = 10m
+maxretry  = 3
 ```
+
+So we block after 3 failed attempts within 10 minutes for 43200 minutes (30 days).
 
 Save the changes and exit the text editor (Ctrl + O, then Ctrl + X in Nano).
 
@@ -191,11 +182,18 @@ Restart the Fail2Ban service to apply the changes:
 systemctl restart fail2ban
 ```
 
-Now, Fail2Ban is configured to monitor SSH logs and block IP addresses that have two or more failed login attempts with password authentication.
+When you call the status with `systemctl status fail2ban.service`you may get a warning that allowipv6 is not set. If this warning comes up, you can solve it with setup `allowipv6` within fail2ban.conf:
+
+```bash
+sed -i 's/#allowipv6 =/allowipv6 = auto/' /etc/fail2ban/fail2ban.conf
+```
+
+Restart the Fail2Ban service to apply the changes:
+```bash
+systemctl restart fail2ban
+```
 
 Fail2Ban's default SSH jail will handle blocking IP addresses for other types of SSH-related offenses, such as excessive authentication failures.
-
-The custom jail and filter you created specifically focus on blocking SSH logins with password authentication after two failed attempts. You can adjust the maxretry value in the custom jail configuration file to set the desired number of failed login attempts before blocking.
 
 By following this tutorial, you can enhance the security of your Linux Debian server by effectively using Fail2Ban to block malicious login attempts and protect against unauthorized access through SSH.
 
@@ -207,20 +205,16 @@ DoS protection modules, such as TCP SYN cookies and connection tracking, provide
 
 By configuring these modules, you enhance your server's resilience against DoS attacks, ensuring its continued availability and optimal performance. Mitigating the risk of resource depletion helps maintain the responsiveness of your server, prevents service disruptions, and safeguards the user experience. Protecting your Linux Debian server with DoS protection modules is an essential step in maintaining a secure and reliable system.
 
-Edit the sysctl configuration file using a text editor:
+Create a bew sysctl configuration file using a text editor:
 ```bash
-nano /etc/sysctl.conf
+nano /etc/sysctl.d/100-net.ipv4.tcp_syncookies.conf
 ```
 
 In the file, look for the following lines or add them if they are not present:
 ```bash
 net.ipv4.tcp_syncookies = 1
-net.ipv4.ip_conntrack_max = <value>
 ```
 - The net.ipv4.tcp_syncookies = 1 line enables TCP SYN cookies. TCP SYN cookies help protect against SYN flood attacks, where an attacker floods the server with SYN packets to exhaust resources.
-- The net.ipv4.ip_conntrack_max = <value> line sets the maximum number of connections that the system can track. Replace <value> with the desired maximum value for connection tracking. This helps prevent resource exhaustion caused by excessive connection tracking.
-
-Save the changes and exit the text editor (Ctrl + O, then Ctrl + X in Nano).
 
 Apply the new sysctl settings by running the following command:
 ```bash
@@ -229,7 +223,14 @@ sysctl -p
 
 This reloads the sysctl settings from the configuration file. The DoS protection modules are now enabled on your Debian server.
 
-By following these steps, you have enabled important DoS protection modules on your Debian server. TCP SYN cookies help protect against SYN flood attacks, and setting the maximum connection tracking value helps prevent resource exhaustion. These measures enhance the server's resilience to DoS attacks by mitigating their impact and preserving the availability and stability of your Debian system.
+Now we can check if its visible by giving out all kernel parameters and grep for our recently set parameter:
+```bash
+sysctl -a | grep net.ipv4.tcp_syncookies
+```
+
+It should now show us `net.ipv4.tcp_syncookies = 1`into the terminal output.
+
+By following these steps, you have enabled important DoS protection modules on your Debian server. TCP SYN cookies help protect against SYN flood attacks. These measures enhance the server's resilience to DoS attacks by mitigating their impact and preserving the availability and stability of your Debian system.
 
 ## 8. Prompt Customization
 You can customize the prompt appearance to display useful information or personalize it according to your preferences. To modify the prompt, edit the PS1 variable in the ~/.bashrc file using a text editor:
@@ -246,7 +247,7 @@ source ~/.bashrc
 
 I'll recommend you to use the following PS1:
 ```bash
-PS1=$(es=$?; if [ $es != 0 ]; then echo "\[\033[01;31m\]RC="$es" "; fi)\[\033[1;37m\]\[\033[01;36m\]\t\[\033[1;37m\]\[\033[01;34m\] \h\[\033[1;37m\] \[\033[01;33m\]\w\[\033[1;37m\] \[\033[01;0m\]\$
+PS1='$(es=$?; if [ $es != 0 ]; then echo "\[\033[01;31m\]RC="$es" "; fi)\[\033[1;37m\]\[\033[01;36m\]\t\[\033[1;37m\]\[\033[01;34m\] \h\[\033[1;37m\] \[\033[01;33m\]\w\[\033[1;37m\] \[\033[01;0m\]\$ '
 ```
 
 It will show you the following informations:
@@ -255,6 +256,15 @@ It will show you the following informations:
 - the hostname
 - currect directory
 - If root a `#`, otherwise a `$`
+
+If you want to have that prompt to your user, the root user and all new created users, you need to edit the `PS1=`line in the following files either:
+```bash
+/etc/skel/.bashrc
+/etc/bash.bashrc
+/etc/profile
+```
+
+Be aware that there are maybe multiple lines for PS1= for different stylings. I'm using it everywhere.
 
 ## 9. Setting up Logration
 
@@ -289,6 +299,7 @@ nano myapp
 4. Inside the configuration file, locate the section that defines the log file you want to rotate. It typically starts with a line like `"/path/to/log/file"`. Make sure you're modifying the correct section for each log file.
 
 Do not change any other options, cause they mostly needed for that specific type of logfile.
+!> Only the "notifempty" and "delaycompress" can removed everywhere to have a daily compress.
 
 5. Add or modify the following options within the log file section:
 - `rotate 14`: This sets the number of log files to keep. Change the value to `14`.
@@ -313,6 +324,8 @@ dateext
 
 8. Test the logrotate configurations to ensure they are working as expected. Run the following command:
 
+!> Please check the `/etc/logrotate.conf` - maybe you need to change the defaults too, so logs like `wtmp` get rotated correctly. 
+
 ```bash
 logrotate -vf /etc/logrotate.conf
 ```
@@ -322,3 +335,8 @@ This command applies the logrotate configurations and displays verbose output so
 9. If the test completes successfully without any errors, you're done! The logrotate configurations have been updated. The logs will now be rotated daily, compressed as .tar.gz files, and include the date in their names. Logs will be retained for 14 days.
 
 ?> Remember to adjust the paths, log file names, and configuration options based on your specific setup.
+
+At least we now delete the logs which where created by setup the server:
+```bash
+rm /var/log/cloud*
+```

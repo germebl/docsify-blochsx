@@ -1,19 +1,12 @@
 - [README](README.md)
 - [Base System](base.md)
 - [VPN Server](vpn.md)
-- Master Server
-  - [Prepare](/master/prepare.md)
-- DB Server
-  - [Prepare](/db/prepare.md)
-- App Server
-  - [Prepare](app.md)
-- Redis Server
-  - [Prepare](/redis/prepare.md)
-- Mail Server
-  - [Prepare](/mail/prepare.md)
-- Monitoring Server
-  - [Prepare](/monitor/prepare.md)
-- Logging/SIEM Server
-  - [Prepare](/siem/prepare.md)
+- [Matrix Server](matrix.md)
+- [App Server](app.md)
+- [DB Server](db.md)
+- [Mail Server](mail.md)
+- [Nameservers](nameservers.md)
+- [Logging/SIEM Server](siem.md)
+- [Monitoring Server](monitor.md)
 - [Mitwirken!](contribute.md)
 - [Support](support.md)

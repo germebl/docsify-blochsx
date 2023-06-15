@@ -1,10 +1,10 @@
 # Setup the VPN Server
 
-This guide will walk you through the necessary preparations for configuring a Wireguard VPN server to build up a company network on a [Linux Debian 11 Base System](base.md). The setup will include the essential steps to install and configure the VPN server and how to connect clients from employees and open the wireguard port in iptables.
+This guide will walk you through the necessary preparations for configuring a Wireguard VPN server to build up a company network on a [Linux Debian 12 Base System](base.md). The setup will include the essential steps to install and configure the VPN server and how to connect clients from employees and open the wireguard port in iptables.
 
 ## Requirements
 
-- [Debian 11 Base System](base.md)
+- [Debian 12 Base System](base.md)
 
 ## 1. Install Wireguard
 The basic installation of wireguard is very simple. We just need to install it over the apt repositorys of our debian system:
@@ -14,6 +14,13 @@ apt install -y wireguard
 
 ## 2. Configure Wireguard Interface
 Wireguard can handle as much interfaces as we want to have. In this case we only need a single interface for our employees. The configuration file for a Wireguard Interface is written within the `/etc/wireguard` folder as `{interface-name}.conf`.
+
+Before we do this we need to create a public and private key which we will use within our servers and clients configuration and secure the privatekey with good permissions:
+```bash
+cd /etc/wireguard
+wg genkey | tee privatekey | wg pubkey > publickey
+chmod 0600 privatekey
+```
 
 In this case we create the file `/etc/wireguard/wg0.conf`:
 
@@ -42,33 +49,21 @@ cat /etc/wireguard/privatekey
 ```
 
 We can now start the Wireguard VPN server and it's interface:
-```
+```bash
 systemctl start wg-quick@wg0
 ```
 
 To enable the vpn to start on system startup, we need to enable the service:
-```
+```bash
 systemctl enable wg-quick@wg0
 ```
 
 Please check the status for issues with:
-```
+```bash
 systemctl status wg-quick@wg0
 ```
 
-## 3. Setup Firewall
-
-Actually the port of iptables cant listen to any traffic, because the firewall does not allow traffic on port 51820. So we need to create a port to allow traffic from all sources to that port.
-
-Because we use iptables-persistent, we will add this rule within the rules-file and then restore the rules to not accidentally set another rule like a fail2ban ssh ban permanently.
-
-1. Open the file /etc/iptables/rules.v4 with `nano /etc/iptables/rules.v4`
-2. After the rule `-A INPUT -p tcp --dport 22 -j ACCEPT` or `-A INPUT -p tcp --dport 22 -s 10.0.0.0/24 -j ACCEPT` start a new line
-3. add the rule `-A INPUT -p udp --dport 51820 -j ACCEPT` to that new line
-4. its very important, that its come before the rule with `-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT`
-5. Restore the IPv4 Rules with `iptables-restore /etc/iptables/rules.v4`
-
-## 4. How to connect a employee computer
+## 3. How to connect a employee computer
 Now we will explain how to connect a clients computer with the Wireguard VPN Server, which replicates the company network (wireguard network 10.0.0.0/24 as network for employee networks and hetzner private network 192.168.0.0/24 as private network for our servers).
 
 1. [Install Wireguard on the employees computer](https://www.wireguard.com/install/)
@@ -99,18 +94,28 @@ Now we will explain how to connect a clients computer with the Wireguard VPN Ser
 
 3. Open the servers configuration file within `/etc/wireguard/wg0.conf` with `nano /etc/wireguard/wg0.conf`
   - Add the Peer (Client) to the end of the file:
-  ```
-  [Peer]
-  PublicKey = <CLIENTS-PUBLIC-KEY>
-  AllowedIPs = 192.168.0.0/24, 10.0.0.0/24
-  ```
-  - Save the file and apply changes with `systemctl restart wg-quick@wg0`
-  4. You should now be able to connect to the VPN server with the employees computer.
-    - On Linux you need to start it with wg-quick@wg0 and can shut it down to wg-quick@wg0
-    - On Windows you can just click `Activate` within the GUI
-    - Test it with trying to `ping 192.168.0.0.2` to check if the vpn server is reachable with the ip address from hetzner network
+```
+[Peer]
+PublicKey = <CLIENTS-PUBLIC-KEY>
+AllowedIPs = 192.168.0.0/24, 10.0.0.0/24
+```
+- Save the file and apply changes with `systemctl restart wg-quick@wg0`
+4. You should now be able to connect to the VPN server with the employees computer.
+  - On Linux you need to start it with wg-quick@wg0 and can shut it down to wg-quick@wg0
+  - On Windows you can just click `Activate` within the GUI
+  - Test it with trying to `ping 192.168.0.0.2` to check if the vpn server is reachable with the ip address from hetzner network
 
+## 4. Setup Firewall
 
-## 5. Change the SSH IPTables Rule
+Actually the port of iptables cant listen to any traffic, because the firewall does not allow traffic on port 51820. So we need to create a port to allow traffic from all sources to that port.
 
-!> As we already told you, its important to change the ssh iptables rule so only clients which are connected to the vpn server have the possibility to connect via ssh to the servers. For more information [check the base setup](base.md#3-firewall-configuration). We do not will inform you again.
+Because we use iptables-persistent, we will add this rule within the rules-file and then restore the rules to not accidentally set another rule like a fail2ban ssh ban permanently.
+
+1. Open the file /etc/iptables/rules.v4 with `nano /etc/iptables/rules.v4`
+2. add the rule `-A INPUT -p udp --dport 51820 -j ACCEPT` to that new line
+3. its very important, that its come before the rule with `-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT`
+4. Restore the IPv4 Rules with `iptables-restore /etc/iptables/rules.v4`
+
+!> Its very important you first added a computer as Peer to the Wireguard VPN server after allowing the Wireguard Port and you are able to connect to the VPN server with your Wireguard Client and able to ping the private ip address of the vpn server. If this does not work, you will not be able to connect to the server with SSH anymore!
+
+After you have tested the VPN connection you can now replace `-A INPUT -p tcp --dport 22 -j ACCEPT` with `-A INPUT -p tcp --dport 22 -s 10.0.0.0/24 -j ACCEPT` and restore again the ip rules.

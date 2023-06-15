@@ -6,10 +6,10 @@
 >  "The perfect Linux Server"
 
 - :open_file_folder: Detailed documentation
-- :sparkles: Web- & PHP-, DB-, Redis-, Mail-Server
-- :sparkles: VPN-, Monitoring-, Logging- & SIEM- Server
+- :sparkles: VPN-, Matrix-, Web- & PHP-, DB-, Mail-Server
+- :sparkles: DNS-, Logging- & SIEM-, Monitoring-Server
 - :floppy_disk: Extended Backup/Restore Script
-- :cloud: Works with Hetzner Cloud & Cloudflare
+- :cloud: Works with Hetzner Cloud
 
 
 [Manual Installation](readme.md)
