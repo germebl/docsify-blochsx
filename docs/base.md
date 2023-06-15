@@ -40,7 +40,7 @@ Once the installation is complete, open a terminal and update the package lists 
 
 ```bash
 apt update
- apt upgrade
+apt upgrade
 ```
 
 ## 3. Install Rsyslog
@@ -56,6 +56,7 @@ To enhance the security of your system, configure the firewall to allow only nec
 
 When you get asked if you want to save the actual rules of ipv4 and ipv6 rules, choose yes.
 
+### Use this before you have setup your VPN server:
 ```bash
 apt install iptables-persistent
 
@@ -75,14 +76,7 @@ iptables-save > /etc/iptables/rules.v4
 ip6tables-save > /etc/iptables/rules.v6
 ```
 
-?> Each setup has its own individual firewall settings. These allow all related and established connections, allow icmp incoming traffic, allow incoming traffic to the loopback interface and drop everything else. When we configure services we will add these rules before rule one, because iptables works in the order the rules are created.
-
-!> As [when you are done with setup your VPN server](vpn.md) you really should change the rule for ssh. Actually we allow all ip addresses to connect with ssh. When you are done with setup your VPN server, you can change the access to port 22 from all to the wireguard vpn network (employee ip addresses when they connected to the vpn server) as follows:
-1. Open the file /etc/iptables/rules.v4 with `nano /etc/iptables/rules.v4`
-2. Replace the rule `-A INPUT -p tcp --dport 22 -j ACCEPT` with `-A INPUT -p tcp --dport 22 -s 10.0.0.0/24 -j ACCEPT`
-3. Restore the IPv4 Rules with `iptables-restore /etc/iptables/rules.v4`
-
-?> We do not allow the SSH port for IPv6 because our VPN uses IPv4 only in the company private network and a connection to the SSH should only be available to clients with a ip-address of the wireguard network. We use iptables-persistent to save the rules to files and restore them on every startup, so they don't get lost.
+?> Each setup has its own individual firewall settings. These allow ssh from anywhere, all related and established connections, allow icmp incoming traffic, allow incoming traffic to the loopback interface and drop everything else. When we configure services we will add these rules before rule one, because iptables works in the order the rules are created.
 
 ## 5. Securing SSH
 

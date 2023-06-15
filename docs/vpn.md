@@ -115,7 +115,3 @@ Because we use iptables-persistent, we will add this rule within the rules-file 
 2. add the rule `-A INPUT -p udp --dport 51820 -j ACCEPT` to that new line
 3. its very important, that its come before the rule with `-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT`
 4. Restore the IPv4 Rules with `iptables-restore /etc/iptables/rules.v4`
-
-!> Its very important you first added a computer as Peer to the Wireguard VPN server after allowing the Wireguard Port and you are able to connect to the VPN server with your Wireguard Client and able to ping the private ip address of the vpn server. If this does not work, you will not be able to connect to the server with SSH anymore!
-
-After you have tested the VPN connection you can now replace `-A INPUT -p tcp --dport 22 -j ACCEPT` with `-A INPUT -p tcp --dport 22 -s 10.0.0.0/24 -j ACCEPT` and restore again the ip rules.
