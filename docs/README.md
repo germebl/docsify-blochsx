@@ -33,7 +33,7 @@ The blochSX project is a documentation guide for setting up the perfect Linux se
 
 > If you wish to use a different server hosting provider, you should be able to compensate for the specific parts that leverage Hetzner Cloud functionality. Other DNS providers are possible. All LEGO supported DNS providers are allowed. HTTP validation with acme.sh should not be used as not all servers will be accessible from outside.
 
-### How to get started?
+## How to get started?
 
 To install and set up the blochSX server, follow these steps:
 

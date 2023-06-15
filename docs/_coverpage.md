@@ -12,5 +12,5 @@
 - :cloud: Works with Hetzner Cloud
 
 
-[Manual Installation](readme.md)
+[Manual Installation](README.md)
 [Contribute](contribute.md)
