@@ -1,7 +1,7 @@
 - [README](README.md)
 - [Base System](base.md)
 - [VPN Server](vpn.md)
-- [Matrix Server](matrix.md)
+- [Chat Server](matrix.md)
 - [App Server](app.md)
 - [DB Server](db.md)
 - [Mail Server](mail.md)

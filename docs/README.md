@@ -9,7 +9,7 @@
 
 The blochSX project is a documentation guide for setting up the perfect Linux server. The components include:
 - Wireguard
-- Matrix Synapse
+- Mattermost
 - NGINX
 - PHP8.2 FPM
 - LEGO
@@ -46,7 +46,7 @@ To install and set up the blochSX server, follow these steps:
 | server | type     | name  | IPv4  | IPv6  |
 |----------|----------|-------|-------|-------|
 | vpn | CX11 | vpn.sudoers.biz | 127.0.0.1 | fe80::1 |
-| matrix | CX11 | matrix.sudoers.biz | 127.0.0.1 | fe80::1 |
+| chat | CX11 | chat.sudoers.biz | 127.0.0.1 | fe80::1 |
 | db | CX11 | db.sudoers.biz | 127.0.0.1 | fe80::1 |
 | app | CX11 | app.sudoers.biz | 127.0.0.1 | fe80::1 |
 | mail | CX11 | mail.sudoers.biz | 127.0.0.1 | fe80::1 |
