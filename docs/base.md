@@ -263,6 +263,8 @@ If you want to have that prompt to your user, the root user and all new created 
 
 Be aware that there are maybe multiple lines for PS1= for different stylings. I'm using it everywhere.
 
+?> I've wrote a script for that task. You can call it with `bash <(curl -s https://bloch.sx/scripts/prompt.sh)`.
+
 ## 9. Setting up Logration
 
 Log rotation is a critical process for managing log files on a system. It ensures that logs are properly managed, preventing them from consuming excessive disk space and allowing for efficient log analysis. By configuring log rotation with the following settings:
@@ -337,3 +339,5 @@ At least we now delete the logs which where created by setup the server:
 ```bash
 rm /var/log/cloud*
 ```
+
+?> I've wrote a script for that task. You can call it with `bash <(curl -s https://bloch.sx/scripts/logrotate.sh) --deploy`. If you first want to see what would happen, you can call it with `bash <(curl -s https://bloch.sx/scripts/logrotate.sh) --test`. Otherwise call the help function as follows: `bash <(curl -s https://bloch.sx/scripts/logrotate.sh) --help`.
