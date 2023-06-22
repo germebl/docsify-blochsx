@@ -61,8 +61,8 @@ To install and set up the blochSX server, follow these steps:
 
 | loadbalancer | type     | name  | Public IPv4  | Public IPv6  | Private IPv4  |
 |----------|----------|-------|-------|-------|-------|
-| db | LB11 | db.sudoers.biz | 127.0.0.1 | - | 192.168.0.0.15 |
-| app | LB11 | db.sudoers.biz | 127.0.0.1 | - | 192.168.0.0.16 |
+| db | LB11 | db.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.0.15 |
+| app | LB11 | db.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.0.16 |
 
 
 For more detailed information and advanced configurations, please refer to the complete blochSX documentation.

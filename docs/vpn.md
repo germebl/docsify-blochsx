@@ -125,3 +125,15 @@ Because we use iptables-persistent, we will add this rule within the rules-file 
 2. add the rule `-A INPUT -p udp --dport 51820 -j ACCEPT` to that new line
 3. its very important, that its come before the rule with `-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT`
 4. Restore the IPv4 Rules with `iptables-restore /etc/iptables/rules.v4`
+
+## 5. DNS
+
+You should create the following DNS records:
+
+| type | name | value  | priority |
+|----------|----------|-------|-------|
+| A | vpn.sudoers.biz | <public-ip-v4-vpn-server> | - |
+| AAAAAA | vpn.sudoers.biz | <public-ip-v6-vpn-server> | - |
+
+- Replace `<public-ip-v4-vpn-server>`
+- Replace `<public-ip-v6-vpn-server>`

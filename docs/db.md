@@ -364,4 +364,22 @@ Add this loadbalancer with the name `db.sudoers.biz`. Add the 3 nodes (`db-a`, `
 
 !> It's important that you create the Loadbalancer with the private network connected. When setting up the service the loadbalancer should connect to the private network of the database servers and not to the public ip address.
 
-Your Loadbalancer is ready to go. When you setup applications use the ip address or the dns-hostname we will setup now as the host and port `3306` as port. Also when you want to connect with like the `root` user to the cluster to create users, databases or something else, just use the ip address/dns-hostname of the loadbalancer. It will replicate everything you do synchronous the other nodes.
+Your Loadbalancer is ready to go. When you setup applications use the ip address as the host and port `3306` as port. Also when you want to connect with like the `root` user to the cluster to create users, databases or something else, just use the ip address/dns-hostname of the loadbalancer. It will replicate everything you do synchronous the other nodes.
+
+## DNS
+
+You should create the following DNS records:
+
+| type | name | value  | priority |
+|----------|----------|-------|-------|
+| A | db.sudoers.biz | <public-ip-v4-db-loadbalancer> | - |
+| AAAA | db.sudoers.biz | <public-ip-v6-db-loadbalancer> | - |
+| A | db-a.sudoers.biz | <public-ip-v4-db-a-server> | - |
+| A | db-b.sudoers.biz | <public-ip-v4-db-b-server> | - |
+| A | db-c.sudoers.biz | <public-ip-v4-db-c-server> | - |
+
+- Replace `<public-ip-v4-db-loadbalancer>`
+- Replace `<public-ip-v6-db-loadbalancer>`
+- Replace `<public-ip-v4-db-a-server>`
+- Replace `<public-ip-v4-db-b-server>`
+- Replace `<public-ip-v4-db-c-server>`
