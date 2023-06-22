@@ -19,10 +19,10 @@ Here i will give you the IPTables Rules for each node. Be aware to replace the i
 
 ### Replace the SSH rule (SSH via VPN only, all nodes!)
 #### before /etc/iptables/rules.v4
-iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+`-A INPUT -p tcp --dport 22 -j ACCEPT`
 
 #### after /etc/iptables/rules.v4
-iptables -A INPUT -p tcp --dport 22 -s <PUBLIC-IP-VPN-SERVER> -j ACCEPT
+`-A INPUT -p tcp --dport 22 -s <PUBLIC-IP-VPN-SERVER> -j ACCEPT`
 
 - Replace `<PUBLIC-IP-VPN-SERVER>` with the public ip address of the vpn server
 
@@ -34,6 +34,7 @@ Because our VPN server will give the clients the IPv4 address only, we do not ne
 ```
 
 ### db-a.sudoers.biz (192.168.0.3)
+```
 -A INPUT -p tcp --dport 3306 -s 192.168.0.15 -j ACCEPT
 -A INPUT -p tcp --dport 3306 -s 192.168.0.4 -j ACCEPT
 -A INPUT -p tcp --dport 4444 -s 192.168.0.4 -j ACCEPT
@@ -43,9 +44,10 @@ Because our VPN server will give the clients the IPv4 address only, we do not ne
 -A INPUT -p tcp --dport 4444 -s 192.168.0.5 -j ACCEPT
 -A INPUT -p tcp --dport 4567 -s 192.168.0.5 -j ACCEPT
 -A INPUT -p tcp --dport 4568 -s 192.168.0.5 -j ACCEPT
-
+```
 
 ### db-b.sudoers.biz (192.168.0.4)
+```
 -A INPUT -p tcp --dport 3306 -s 192.168.0.15 -j ACCEPT
 -A INPUT -p tcp --dport 3306 -s 192.168.0.3 -j ACCEPT
 -A INPUT -p tcp --dport 4444 -s 192.168.0.3 -j ACCEPT
@@ -55,8 +57,10 @@ Because our VPN server will give the clients the IPv4 address only, we do not ne
 -A INPUT -p tcp --dport 4444 -s 192.168.0.5 -j ACCEPT
 -A INPUT -p tcp --dport 4567 -s 192.168.0.5 -j ACCEPT
 -A INPUT -p tcp --dport 4568 -s 192.168.0.5 -j ACCEPT
+```
 
 ### db-c.sudoers.biz (192.168.0.5)
+```
 -A INPUT -p tcp --dport 3306 -s 192.168.0.15 -j ACCEPT
 -A INPUT -p tcp --dport 3306 -s 192.168.0.3 -j ACCEPT
 -A INPUT -p tcp --dport 4444 -s 192.168.0.3 -j ACCEPT
@@ -66,6 +70,7 @@ Because our VPN server will give the clients the IPv4 address only, we do not ne
 -A INPUT -p tcp --dport 4444 -s 192.168.0.4 -j ACCEPT
 -A INPUT -p tcp --dport 4567 -s 192.168.0.4 -j ACCEPT
 -A INPUT -p tcp --dport 4568 -s 192.168.0.4 -j ACCEPT
+```
 
 ### Reload the rules on each node
 Now after changing the firewall rules, we will reload the rules on each node:
