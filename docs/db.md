@@ -175,6 +175,11 @@ mv /var/lib/mysql.bak/* /var/lib/mysql
 rm -r /var/lib/mysql.bak
 ```
 
+Do not forget to change the owner and group of the newly created folder to mysql:
+```bash
+chown -R mysql:mysql /var/lib/mysql
+```
+
 
 ## Editing configuration of db-a
 
@@ -228,7 +233,7 @@ nano /etc/mysql/mysql.conf.d/mysqld.cnf
 
 ```bash
 [mysqld]
-wsrep_provider_options="socket.ssl_key=server-key.pem;socket.ssl_cert=server-cert.pem;socket.ssl_ca=ca.pem"
+wsrep_provider_options="socket.ssl=ON;socket.ssl_key=server-key.pem;socket.ssl_cert=server-cert.pem;socket.ssl_ca=ca.pem"
 
 [sst]
 encrypt=4
@@ -236,6 +241,38 @@ ssl-key=server-key.pem
 ssl-ca=ca.pem
 ssl-cert=server-cert.pem
 ```
+
+## Copy .PEM Files
+
+Before we can bootstrap our first node, we need to copy the .PEM files from our first node to the other nodes, so they can use the correct SSL files to connect.
+
+On your first node `db-a` create a new SSH key:
+```bash
+ssh-keygen -o -a 100 -t ed25519 -f ~/.ssh/id_ed25519 -C "pxc"
+```
+
+You do not need to add a passphrase, but i'll recommend to.
+
+Now get the public key:
+```bash
+cat /root/.ssh/id_ed25519.pub
+```
+
+Now add this public key to the following file on `db-b` and `db-c`:
+```bash
+nano /root/.ssh/authorized_keys
+```
+
+!> After we are done i would recommend to remove this public keys from `db-b` and `db-c`, further to remove the `id_ed25519` and `id_ed25519.pub` file from the `db-a`.
+
+Now we will transfer the needed SSL certificate files from `db-a` to `db-b` and `db-c`. So call this command on `db-a`:
+```bash
+scp /var/lib/mysql/*.pem 192.168.0.4:/var/lib/mysql/
+scp /var/lib/mysql/*.pem 192.168.0.5:/var/lib/mysql/
+```
+
+- Replace the ip-addresses if you use another one. They should be the ipv4 addresses of `db-b` and `db-c`.
+
 
 ## Bootstrap the first node
 
@@ -251,64 +288,6 @@ systemctl start mysql@bootstrap.service
 ```
 
 When you start the node using the previous command, it runs in bootstrap mode with `wsrep_cluster_address=gcomm://`. This tells the node to initialize the cluster with `wsrep_cluster_conf_id` variable set to `1`.
-
-After you add other nodes to the cluster, you can then restart this node as normal, and it will use standard configuration again.
-
-## Essential configuration variables
-
-`wsrep_provider`
-
-Specify the path to the Galera library.
-
-`/usr/lib/galera4/libgalera_smm.so`
-
-
-`wsrep_cluster_name`
-
-Specify the logical name for your cluster. It must be the same for all nodes in your cluster. In this case i will use `sudoers.biz`
-
-`wsrep_cluster_address`
-
-Specify the IP addresses of nodes in your cluster. At least one is required for a node to join the cluster, but it is recommended to list addresses of all nodes. This way if the first node in the list is not available, the joining node can use other addresses.
-
-?> No addresses are required for the initial node in the cluster. However, it is recommended to specify them and properly bootstrap the first node. This will ensure that the node is able to rejoin the cluster if it goes down in the future.
-
-`wsrep_node_name`
-
-Specify the logical name for each individual node. If this variable is not specified, the host name will be used. So i will not specify it, cause our hostnames are set correctly.
-
-`wsrep_node_address`
-
-Specify the IP address of this particular node. In this case it's `192.168.0.3`
-
-`wsrep_sst_method`
-
-By default, Percona XtraDB Cluster uses Percona [XtraBackup](https://www.percona.com/software/mysql-database/percona-xtrabackup) for State Snapshot Transfer. `xtrabackup-v2` is the only supported option for this variable. This method requires a user for SST to be set up on the initial node.
-
-`pxc_strict_mode`
-
-PXC Strict Mode is enabled by default and set to `ENFORCING`, which blocks the use of tech preview features and unsupported features in Percona XtraDB Cluster.
-
-`binlog_format`
-
-Galera supports only row-level replication, so set `binlog_format=ROW`.
-
-`default_storage_engine`
-
-Galera fully supports only the InnoDB storage engine. It will not work correctly with MyISAM or any other non-transactional storage engines. Set this variable to `default_storage_engine=InnoDB`.
-
-`innodb_autoinc_lock_mode`
-
-Galera supports only interleaved (`2`) lock mode for InnoDB. Setting the traditional (`0`) or consecutive (`1`) lock mode can cause replication to fail due to unresolved deadlocks. Set this variable to `innodb_autoinc_lock_mode=2`.
-
-## Restart the first node (db-a)
-
-When everything is done, we can now restart the Node to run normally and not within the bootstraped mode:
-
-```bash
-systemctl stop mysql@bootstrap.service
-systemctl enable --now mysql.service
-```
 
 ## Adding the second and third node (db-b & db-c)
 
@@ -330,41 +309,52 @@ The output of `SHOW STATUS` shows that the new node has been successfully added 
 
 If the state of the second node is `Synced` as in the previous example, then the node received full SST is synchronized with the cluster, and you can proceed to add the third node (db-c).
 
+## Restart the first node (db-a)
+
+When everything is done, we can now restart the Node to run normally and not within the bootstraped mode:
+
+```bash
+systemctl stop mysql@bootstrap.service
+systemctl enable --now mysql.service
+```
+
+?> When at any time you stop the full cluster - so all nodes at the same time, you need to bootstrap again!
+
 # Verify replication
 
 Use the following procedure to verify replication by creating a new database on the second node, creating a table for that database on the third node, and adding some records to the table on the first node.
 
-1. Create a new database on the second node (db-b):
+1. Create a new database on the second node (`db-b`):
 
     ```sql
     CREATE DATABASE percona;
     ```
 
-2. Switch to a newly created database on the third node (db-c):
+2. Switch to a newly created database on the third node (`db-c`):
 
     ```sql
     USE percona;
     ```
 
-3. Create a table on the third node (db-c):
+3. Create a table on the third node (`db-c`):
 
     ```sql
     CREATE TABLE example (node_id INT PRIMARY KEY, node_name VARCHAR(30));
     ```
 
-4. Insert records on the first node (db-a):
+4. Insert records on the first node (`db-a`):
 
     ```sql
     INSERT INTO percona.example VALUES (1, 'percona1');
     ```
 
-5. Retrieve rows from that table on the second node (db-a):
+5. Retrieve rows from that table on the second node (`db-a`):
 
     ```sql
     SELECT * FROM percona.example;
     ```
 
-If the commands from 1.-5. responded with `Query OK` its looking fine. Within step 5. you should then see the rows without errors displayed. If that is true, everything worked like a charme.
+If the commands from 1.-5. responded with `Query OK` its looking fine. Within step 5 you should then see the rows without errors displayed. If that is true, everything worked like a charme.
 
 ## Loadbalancing
 
