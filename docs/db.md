@@ -7,7 +7,6 @@ Setting up a 3-node Percona XtraDB Cluster (PXC) allows you to create a highly a
 - 3 nodes (db-a, db-b, db-c) with [Debian 11 Base System](base.md)
 - 1 loadbalancer (least connections algorithm)
 
-
 ## Firewalling
 
 Here i will give you the IPTables Rules for each node. Be aware to replace the ip-addresses with your own.
@@ -17,25 +16,28 @@ Here i will give you the IPTables Rules for each node. Be aware to replace the i
 3. Save and Exit the file with CTRL+X and press `Y`, then `Enter`
 4. Restore the rules with `iptables-restore < /etc/iptables/rules.v4`
 
-### Replace the SSH rule (SSH via VPN only, all nodes!)
-#### before /etc/iptables/rules.v4
+### Replace v4 SSH Rule
+
+!> This should be done on all nodes
+
+**before /etc/iptables/rules.v4**
 `-A INPUT -p tcp --dport 22 -j ACCEPT`
 
-#### after /etc/iptables/rules.v4
+**after /etc/iptables/rules.v4**
 `-A INPUT -p tcp --dport 22 -s <PUBLIC-IP-VPN-SERVER> -j ACCEPT`
 
 - Replace `<PUBLIC-IP-VPN-SERVER>` with the public ip address of the vpn server
 
-#### Remove SSH rule from /etc/iptables/rules.v6
+### Remove v6 SSH Rule
 Because our VPN server will give the clients the IPv4 address only, we do not need to allow SSH via IPv6 anymore. So remove the following rule from the `/etc/iptables/rules.v6`file:
 
 ```bash
 -A INPUT -p tcp --dport 22 -j ACCEPT
 ```
 
-### db-a.sudoers.biz (192.168.0.3)
+### Rules for db-a
 ```
--A INPUT -p tcp --dport 3306 -s 192.168.0.15 -j ACCEPT
+-A INPUT -p tcp --dport 3306 -s 192.168.0.14 -j ACCEPT
 -A INPUT -p tcp --dport 3306 -s 192.168.0.4 -j ACCEPT
 -A INPUT -p tcp --dport 4444 -s 192.168.0.4 -j ACCEPT
 -A INPUT -p tcp --dport 4567 -s 192.168.0.4 -j ACCEPT
@@ -46,9 +48,9 @@ Because our VPN server will give the clients the IPv4 address only, we do not ne
 -A INPUT -p tcp --dport 4568 -s 192.168.0.5 -j ACCEPT
 ```
 
-### db-b.sudoers.biz (192.168.0.4)
+### Rules for db-b
 ```
--A INPUT -p tcp --dport 3306 -s 192.168.0.15 -j ACCEPT
+-A INPUT -p tcp --dport 3306 -s 192.168.0.14 -j ACCEPT
 -A INPUT -p tcp --dport 3306 -s 192.168.0.3 -j ACCEPT
 -A INPUT -p tcp --dport 4444 -s 192.168.0.3 -j ACCEPT
 -A INPUT -p tcp --dport 4567 -s 192.168.0.3 -j ACCEPT
@@ -59,9 +61,9 @@ Because our VPN server will give the clients the IPv4 address only, we do not ne
 -A INPUT -p tcp --dport 4568 -s 192.168.0.5 -j ACCEPT
 ```
 
-### db-c.sudoers.biz (192.168.0.5)
+### Rules for db-c
 ```
--A INPUT -p tcp --dport 3306 -s 192.168.0.15 -j ACCEPT
+-A INPUT -p tcp --dport 3306 -s 192.168.0.14 -j ACCEPT
 -A INPUT -p tcp --dport 3306 -s 192.168.0.3 -j ACCEPT
 -A INPUT -p tcp --dport 4444 -s 192.168.0.3 -j ACCEPT
 -A INPUT -p tcp --dport 4567 -s 192.168.0.3 -j ACCEPT
@@ -320,7 +322,7 @@ systemctl enable --now mysql.service
 
 ?> When at any time you stop the full cluster - so all nodes at the same time, you need to bootstrap again!
 
-# Verify replication
+## Verify replication
 
 Use the following procedure to verify replication by creating a new database on the second node, creating a table for that database on the third node, and adding some records to the table on the first node.
 

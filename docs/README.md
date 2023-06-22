@@ -52,17 +52,16 @@ To install and set up the blochSX server, follow these steps:
 | app-a | CX11 | app-a.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.6 |
 | app-b | CX11 | app-b.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.7 |
 | mx-a | CX11 | mx-a.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.8 |
-| mx-b | CX11 | mx-b.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.9 |
-| ns1 | CX11 | ns1.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.10 |
-| ns2 | CX11 | ns2.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.11 |
-| chat | CX11 | chat.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.12 |
-| siem | CX11 | siem.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.13 |
-| monitor | CX11 | monitor.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.14 |
+| ns1 | CX11 | ns1.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.09 |
+| ns2 | CX11 | ns2.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.10 |
+| chat | CX11 | chat.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.11 |
+| siem | CX11 | siem.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.12 |
+| monitor | CX11 | monitor.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.13 |
 
 | loadbalancer | type     | name  | Public IPv4  | Public IPv6  | Private IPv4  |
 |----------|----------|-------|-------|-------|-------|
-| db | LB11 | db.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.0.15 |
-| app | LB11 | db.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.0.16 |
+| db | LB11 | db.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.14 |
+| app | LB11 | app.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.15 |
 
 
 For more detailed information and advanced configurations, please refer to the complete blochSX documentation.
