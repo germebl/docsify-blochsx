@@ -43,17 +43,27 @@ To install and set up the blochSX server, follow these steps:
 
 3. **Let's go**: To get started please read the documentation in the correct order you'll see in the sidebar. Each server we will setup, needs the `base` setup. From there you can do each setup.
 
-| server | type     | name  | IPv4  | IPv6  |
-|----------|----------|-------|-------|-------|
-| vpn | CX11 | vpn.sudoers.biz | 127.0.0.1 | fe80::1 |
-| chat | CX11 | chat.sudoers.biz | 127.0.0.1 | fe80::1 |
-| db | CX11 | db.sudoers.biz | 127.0.0.1 | fe80::1 |
-| app | CX11 | app.sudoers.biz | 127.0.0.1 | fe80::1 |
-| mail | CX11 | mail.sudoers.biz | 127.0.0.1 | fe80::1 |
-| ns1 | CX11 | ns1.sudoers.biz | 127.0.0.1 | fe80::1 |
-| ns2 | CX11 | ns2.sudoers.biz | 127.0.0.1 | fe80::1 |
-| siem | CX11 | siem.sudoers.biz | 127.0.0.1 | fe80::1 |
-| monitor | CX11 | monitor.sudoers.biz | 127.0.0.1 | fe80::1 |
+| server | type     | name  | Public IPv4  | Public IPv6  | Private IPv4  |
+|----------|----------|-------|-------|-------|-------|
+| vpn | CX11 | vpn.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.0.2 |
+| db-a | CX11 | db-a.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.3 |
+| db-b | CX11 | db-b.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.4 |
+| db-c | CX11 | db-c.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.5 |
+| app-a | CX11 | app-a.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.6 |
+| app-b | CX11 | app-b.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.7 |
+| mx-a | CX11 | mx-a.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.8 |
+| mx-b | CX11 | mx-b.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.9 |
+| ns1 | CX11 | ns1.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.10 |
+| ns2 | CX11 | ns2.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.11 |
+| chat | CX11 | chat.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.12 |
+| siem | CX11 | siem.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.13 |
+| monitor | CX11 | monitor.sudoers.biz | 127.0.0.1 | fe80::1 | 192.168.0.14 |
+
+| loadbalancer | type     | name  | Public IPv4  | Public IPv6  | Private IPv4  |
+|----------|----------|-------|-------|-------|-------|
+| db | LB11 | db.sudoers.biz | 127.0.0.1 | - | 192.168.0.0.15 |
+| app | LB11 | db.sudoers.biz | 127.0.0.1 | - | 192.168.0.0.16 |
+
 
 For more detailed information and advanced configurations, please refer to the complete blochSX documentation.
 

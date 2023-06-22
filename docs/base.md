@@ -1,10 +1,13 @@
 # Setup the Base Server
 
-This guide will walk you through the necessary preparations for configuring a basic Linux Debian 12 system. The setup will include some essential security measures and basic configurations and should be the template for all of our servers.
+This guide will walk you through the necessary preparations for configuring a basic Linux Debian 11 system. The setup will include some essential security measures and basic configurations and should be the template for all of our servers.
+
+## Prerequisites
+- [Hetzner Cloud Console Account](https://console.hetzner.cloud)
 
 ## 1. Order & rDNS
 
-First, order a server on the hetzner cloud. It should have the specifications from the general readme. Choose your specifications in order of the list. While ordering i'll recommend to choose a good location for your project. Next important thing is to choose *Debian 12* as operating system.
+First, order a server on the hetzner cloud. It should have the specifications from the general readme. Choose your specifications in order of the list. While ordering i'll recommend to choose a good location for your project. Next important thing is to choose *Debian 11* as operating system.
 
 ?> If its your first server you will order, please activate "private network" on the "Networking" step and create the following network:
   name: (optional)
@@ -66,7 +69,7 @@ iptables -A INPUT -p icmp -j ACCEPT
 iptables -A INPUT -i lo -j ACCEPT
 iptables -A INPUT -j DROP
 
-iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+ip6tables -A INPUT -p tcp --dport 22 -j ACCEPT
 ip6tables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 ip6tables -A INPUT -p icmpv6 -j ACCEPT
 ip6tables -A INPUT -i lo -j ACCEPT
@@ -80,7 +83,7 @@ ip6tables-save > /etc/iptables/rules.v6
 
 ## 5. Securing SSH
 
-Securing SSH (Secure Shell) is of paramount importance for any Linux system, including Linux Debian 12. SSH is a widely used protocol for remote access to servers and allows secure communication between a client and a server over an unsecured network.Here's a short introduction on why it's crucial to secure SSH:
+Securing SSH (Secure Shell) is of paramount importance for any Linux system, including Linux Debian 11. SSH is a widely used protocol for remote access to servers and allows secure communication between a client and a server over an unsecured network.Here's a short introduction on why it's crucial to secure SSH:
 
 1. **Protection against unauthorized access:** SSH is often targeted by malicious actors attempting to gain unauthorized access to systems. By securing SSH, you significantly reduce the risk of successful attacks such as brute-force password guessing or exploitation of vulnerabilities. This helps safeguard sensitive data, applications, and system resources from unauthorized access.
 
@@ -92,7 +95,7 @@ Securing SSH (Secure Shell) is of paramount importance for any Linux system, inc
 
 5. **Compliance with security best practices:** Secure SSH configurations align with security best practices and industry standards. By implementing these measures, you demonstrate a commitment to maintaining a secure system environment. This is particularly crucial if you handle sensitive data, are subject to regulatory requirements, or have a responsibility to protect customer information.
 
-Overall, securing SSH is essential for safeguarding your Linux Debian 12 system from unauthorized access, data breaches, and other security threats. By implementing strong authentication mechanisms, encrypting communication, and following best practices, you significantly enhance the security posture of your system, ensuring the confidentiality, integrity, and availability of your data and resources.
+Overall, securing SSH is essential for safeguarding your Linux Debian 11 system from unauthorized access, data breaches, and other security threats. By implementing strong authentication mechanisms, encrypting communication, and following best practices, you significantly enhance the security posture of your system, ensuring the confidentiality, integrity, and availability of your data and resources.
 
 Edit the SSH server configuration file using a text editor. The configuration file is located at `/etc/ssh/sshd_config`. Use the following command to open it:
 

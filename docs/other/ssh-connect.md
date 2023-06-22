@@ -1,10 +1,7 @@
 # Connect to a Linux Debian Server via SSH (Windows/Linux)
 
 1. **Obtain the server's IP address**
-   - You will need the IP address of the server you want to connect to. You can get it from the project overview in your [hetzner cloud console](https://console.hetzner.cloud) account.
-
-1. **Obtain the server's IP address**
-   - You will need the IP address of the Linux Debian server you want to connect to. This can typically be obtained from your server administrator or through a hosting provider.
+   - You will need the IP address of the server you want to connect to. You can get it from the project overview in your [hetzner cloud console](https://console.hetzner.cloud) account. You will need the public ip address.
 
 2. **Open a terminal or command prompt**
    - On Windows, press Win+R, type "cmd," and hit Enter to open a command prompt.
@@ -12,10 +9,10 @@
 
 3. **Connect to the server via SSH**
    - In the terminal or command prompt, run the following command:
+     ```bash
+     ssh -i </path/to/private_key> <username>@<server_ip_address>
      ```
-     ssh -i /path/to/private_key username@server_ip_address
-     ```
-   - Replace `username` with your actual username on the server and `server_ip_address` with the IP address of the Linux Debian server. Replace `/path/to/private_key` with the path to your ssh private key.
+   - Replace `<username>` with your actual username on the server and `<server_ip_address>` with the public IP address of the Linux Debian server. Replace `</path/to/private_key>` with the path to your ssh private key.
    - If it's your first time connecting to the server, you will be prompted to confirm the server's fingerprint. Type "yes" and press Enter to proceed.
    - Then, you will be prompted to enter your passphrase. Type your passphrase and press Enter. Note that the passphrase characters won't be visible as you type for security reasons.
 
