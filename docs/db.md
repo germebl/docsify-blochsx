@@ -128,43 +128,85 @@ During the installation, you are requested to provide a password for the `root` 
 
 ## Stopping the MySQL Service
 
-After you install Percona XtraDB Cluster and stop the `mysql` service,
+After you install Percona XtraDB Cluster stop the `mysql` service on all nodes:
 
 ```bash
 systemctl stop mysql.service
 ```
+
+## Changing the DataDir
+
+Because our servers hasnt that much storage, we will need on each node a own SSD Volume from the Hetzner Cloud Console. For the tutorial we go to the Hetzner Cloud Console and create 3 volumes with each 10 GB storage in EXT4 format and automatically mount.
+
+After that, we will move the actual data directory of mysql to a backup directory and recreate it:
+```bash
+mv /var/lib/mysql /var/lib/mysql.bak
+mkdir /var/lib/mysql
+```
+
+Then we need to edit the fstab:
+```bash
+nano /etc/fstab
+```
+
+Here you will now find a entry like this:
+```bash
+/dev/disk/by-id/scsi-0HC_Volume_33591309 /mnt/HC_Volume_33591309 ext4 discard,nofail,defaults 0 0
+```
+
+We now change the directory of the destination `/mnt/HC_Volume_33591309`to the location of the mysql data directory. Its should look like this:
+```bash
+/dev/disk/by-id/scsi-0HC_Volume_33591309 /var/lib/mysql ext4 discard,nofail,defaults 0 0
+```
+
+Save and Exit the file and reload the mount:
+```bash
+mount -a
+```
+
+Now we remove the `lost+found` folder from the mounted directory:
+```bash
+rm -r /var/lib/mysql/*
+```
+
+After that steps are done, we can now move back the files from the datadir to the new datadir and delete the old folder:
+```bash
+mv /var/lib/mysql.bak/* /var/lib/mysql
+rm -r /var/lib/mysql.bak
+```
+
 
 ## Editing configuration of db-a
 
 Edit the configuration file of the `db-a` to provide the cluster settings.
 
 ```bash
-    nano  `/etc/mysql/mysql.conf.d/mysqld.cnf`:
+nano /etc/mysql/mysql.conf.d/mysqld.cnf
 ```
 
-    ```bash
-    wsrep_provider=/usr/lib/galera4/libgalera_smm.so
-    wsrep_cluster_name=pxc-cluster
-    wsrep_cluster_address=gcomm://192.168.0.3,192.168.0.4,192.168.0.5
-    ```
+```bash
+wsrep_provider=/usr/lib/galera4/libgalera_smm.so
+wsrep_cluster_name=pxc-cluster
+wsrep_cluster_address=gcomm://192.168.0.3,192.168.0.4,192.168.0.5
+```
 
 ## Configure db-a
 
 Now we will configure the needed settings for the first node
 
 ```bash
-    nano  `/etc/mysql/mysql.conf.d/mysqld.cnf`:
+nano /etc/mysql/mysql.conf.d/mysqld.cnf
 ```
 
-    ```bash
-    wsrep_node_name=db-a
-    wsrep_node_address=192.168.0.3
-    pxc_strict_mode=ENFORCING
-    ```
+```bash
+wsrep_node_name=db-a
+wsrep_node_address=192.168.0.3
+pxc_strict_mode=ENFORCING
+```
 
 ## Configure the other nodes (db-b & db-c)
 
-4. Set up `db-b` and `db-c` in the same way: Stop the server and update the configuration file applicable to your system. All settings are the same except for `wsrep_node_name` and `wsrep_node_address`.
+4. Set up `db-b` and `db-c` in the same way: Stop the server, mount the volume as datadir and update the configuration file applicable to your system. All settings are the same except for `wsrep_node_name` and `wsrep_node_address`.
 
     For `db-b`
 
@@ -181,19 +223,19 @@ Now we will configure the needed settings for the first node
 Each node of the cluster must use the same SSL certificates.
 
 ```bash
-    nano  `/etc/mysql/mysql.conf.d/mysqld.cnf`:
+nano /etc/mysql/mysql.conf.d/mysqld.cnf
 ```
 
-    ```bash
-    [mysqld]
-    wsrep_provider_options=”socket.ssl_key=server-key.pem;socket.ssl_cert=server-cert.pem;socket.ssl_ca=ca.pem”
+```bash
+[mysqld]
+wsrep_provider_options="socket.ssl_key=server-key.pem;socket.ssl_cert=server-cert.pem;socket.ssl_ca=ca.pem"
 
-    [sst]
-    encrypt=4
-    ssl-key=server-key.pem
-    ssl-ca=ca.pem
-    ssl-cert=server-cert.pem
-    ```
+[sst]
+encrypt=4
+ssl-key=server-key.pem
+ssl-ca=ca.pem
+ssl-cert=server-cert.pem
+```
 
 ## Bootstrap the first node
 
@@ -272,15 +314,15 @@ systemctl enable --now mysql.service
 
 Start the second node using the following command:
 
-```{.bash data-prompt="[root@pxc2 ~]#"}
-[root@pxc2 ~]# systemctl start mysql
+```bash
+systemctl start mysql
 ```
 
 After the server starts, it receives SST automatically.
 
 To check the status of the second node, run the following within mysql:
 
-```
+```sql
 show status like 'wsrep%';
 ```
 
